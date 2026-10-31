@@ -1,0 +1,1697 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Network Principles Study Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: fixed left contents rail on wide screens, slide-in drawer on phones; single reading column; quiz as a separate view. */
+:root {
+  --bg: #f4f6f5;
+  --paper: #ffffff;
+  --ink: #152320;
+  --ink-2: #44524e;
+  --ink-3: #6d7b77;
+  --line: #d9e0dd;
+  --line-strong: #b4c0bb;
+  --accent: #0d6b5c;
+  --accent-ink: #ffffff;
+  --accent-soft: #e1f0ec;
+  --mark: rgba(244, 190, 52, 0.38);
+  --note-bg: #fbf6e6;
+  --note-line: #d8c68a;
+  --good: #1b7a46;
+  --good-bg: #e3f3e9;
+  --bad: #b3261e;
+  --bad-bg: #fbe7e5;
+  --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-read: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1514; --paper: #151d1b; --ink: #e5ede9; --ink-2: #b2c0bb; --ink-3: #8a9a95;
+    --line: #26332f; --line-strong: #3c4d47; --accent: #5fd0b8; --accent-ink: #0a1210; --accent-soft: #19302b;
+    --mark: rgba(233, 178, 40, 0.30); --note-bg: #231f12; --note-line: #5a4f25;
+    --good: #6fd39a; --good-bg: #143024; --bad: #ff8f86; --bad-bg: #3a1a18; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1514; --paper: #151d1b; --ink: #e5ede9; --ink-2: #b2c0bb; --ink-3: #8a9a95;
+  --line: #26332f; --line-strong: #3c4d47; --accent: #5fd0b8; --accent-ink: #0a1210; --accent-soft: #19302b;
+  --mark: rgba(233, 178, 40, 0.30); --note-bg: #231f12; --note-line: #5a4f25;
+  --good: #6fd39a; --good-bg: #143024; --bad: #ff8f86; --bad-bg: #3a1a18; color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--paper); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--paper); border-bottom: 1px solid var(--line);
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+}
+.top-row { display: flex; align-items: center; gap: 8px; min-height: 52px; max-width: 1180px; margin: 0 auto; }
+.brand { font-weight: 600; font-size: 15px; letter-spacing: 0.01em; margin-right: auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand small { display: block; font-weight: 400; font-size: 12px; color: var(--ink-3); letter-spacing: 0; }
+.btn {
+  min-height: 44px; min-width: 44px; padding: 0 14px; border: 1px solid var(--line-strong); background: var(--paper); border-radius: 4px; font-size: 14px; font-weight: 500;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: var(--ink);
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.ghost { border-color: transparent; }
+.btn[aria-pressed="true"], .btn.on { background: var(--accent-soft); border-color: var(--accent); }
+.progress { height: 3px; background: var(--line); margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+.progress > i { display: block; height: 100%; width: 0; background: var(--accent); }
+
+/* Shell */
+.shell { max-width: 1180px; margin: 0 auto; display: block; }
+.rail {
+  position: fixed; z-index: 70; top: 0; bottom: 0; left: 0; width: min(88vw, 340px); background: var(--paper); border-right: 1px solid var(--line);
+  transform: translateX(-102%); transition: transform 0.18s ease; overflow-y: auto; overscroll-behavior: contain;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.rail.open { transform: none; box-shadow: 0 0 0 100vmax rgba(10, 20, 18, 0.45); }
+.rail h2 { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin: 18px 0 6px; font-weight: 600; }
+.rail-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rail-head strong { font-size: 15px; }
+.lec-btn {
+  width: 100%; text-align: left; border: 0; background: none; padding: 10px 8px; min-height: 44px; border-radius: 4px; display: flex; gap: 10px; align-items: baseline;
+}
+.lec-btn:hover { background: var(--accent-soft); }
+.lec-btn .n { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); flex: none; }
+.lec-btn[aria-current="true"] { background: var(--accent-soft); font-weight: 600; }
+.toc { list-style: none; margin: 2px 0 10px 0; padding: 0 0 0 14px; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 8px 10px; min-height: 40px; font-size: 14px; color: var(--ink-2); text-decoration: none; border-radius: 4px; }
+.toc a:hover { background: var(--accent-soft); color: var(--ink); }
+.toc a.cur { color: var(--accent); font-weight: 600; }
+.rail .btn { width: 100%; justify-content: flex-start; margin-top: 8px; }
+
+@media (min-width: 960px) {
+  .shell { max-width: none; margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 0; }
+  .rail { position: sticky; top: 56px; transform: none; width: auto; height: calc(100vh - 56px); border: 0; border-right: 1px solid var(--line); background: transparent; padding: 18px 16px 24px 16px; z-index: 1; box-shadow: none !important; }
+  main { width: 100%; max-width: 900px; margin: 0 auto; padding-inline: 40px; }
+  .rail-head .btn, #menuBtn { display: none; }
+}
+
+/* Reading area */
+main { min-width: 0; padding-block: 24px 80px; }
+.lec-head { padding-bottom: 20px; border-bottom: 2px solid var(--ink); margin-bottom: 8px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+h1 { font-size: clamp(26px, 6vw, 38px); line-height: 1.15; margin: 0 0 10px; font-weight: 600; text-wrap: balance; letter-spacing: -0.01em; }
+.blurb { font-family: var(--font-read); font-size: 18px; color: var(--ink-2); margin: 0; max-width: 62ch; }
+.source-note { font-size: 13px; color: var(--ink-3); margin: 14px 0 0; max-width: 62ch; }
+.lec-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+details.topic { border-bottom: 1px solid var(--line); }
+details.topic > summary {
+  list-style: none; cursor: pointer; display: flex; gap: 12px; align-items: flex-start; padding: 18px 0; min-height: 56px;
+}
+details.topic > summary::-webkit-details-marker { display: none; }
+details.topic > summary::before {
+  content: "+"; flex: none; width: 26px; height: 26px; margin-top: 1px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 4px; font-family: var(--font-mono); font-size: 16px; line-height: 1; color: var(--accent);
+}
+details.topic[open] > summary::before { content: "\2212"; }
+.topic-title { font-size: 21px; line-height: 1.25; font-weight: 600; margin: 0; text-wrap: balance; }
+.topic-src { display: block; font-size: 12.5px; color: var(--ink-3); font-weight: 400; margin-top: 3px; }
+.topic-body { padding: 0 0 26px 0; max-width: 68ch; }
+.topic-body > * + * { margin-top: 18px; }
+.topic-body p, .topic-body li, .topic-body td, .topic-body th { font-family: var(--font-read); font-size: 17.5px; line-height: 1.62; }
+.topic-body p { margin: 0; }
+strong { font-weight: 650; background: linear-gradient(transparent 58%, var(--mark) 58%); }
+code { font-family: var(--font-mono); font-size: 0.86em; background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+.label { font-family: var(--font-ui); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--ink-3); margin: 0 0 8px; }
+
+.defs { border: 1px solid var(--line-strong); background: var(--paper); }
+.defs .label { padding: 8px 14px; margin: 0; background: var(--accent-soft); color: var(--accent); border-bottom: 1px solid var(--line-strong); }
+.defs dl { margin: 0; }
+.defs .d { padding: 12px 14px; }
+.defs .d + .d { border-top: 1px solid var(--line); }
+.defs dt { font-family: var(--font-ui); font-weight: 600; font-size: 16px; margin: 0 0 2px; }
+.defs dd { margin: 0; font-family: var(--font-read); font-size: 17px; line-height: 1.55; }
+
+.list ul, .list ol { margin: 0; padding-left: 22px; }
+.list li + li { margin-top: 6px; }
+.list li::marker { color: var(--accent); }
+.steps ol { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+.steps li { counter-increment: s; position: relative; padding: 0 0 12px 40px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: 13px; font-weight: 600; border-radius: 50%; }
+.steps li:not(:last-child)::after { content: ""; position: absolute; left: 12.5px; top: 30px; bottom: 2px; width: 1px; background: var(--line-strong); }
+
+.pc { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .pc { grid-template-columns: 1fr 1fr; } }
+.pc > div { border: 1px solid var(--line); background: var(--paper); padding: 12px 14px; min-width: 0; }
+.pc .pro .label { color: var(--good); }
+.pc .con .label { color: var(--bad); }
+.pc ul { margin: 0; padding-left: 20px; }
+.pc li + li { margin-top: 5px; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line-strong); background: var(--paper); -webkit-overflow-scrolling: touch; }
+.tbl table { border-collapse: collapse; width: 100%; min-width: 440px; }
+.tbl caption { text-align: left; font-family: var(--font-ui); font-size: 13px; color: var(--ink-3); padding: 10px 12px; caption-side: top; }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 9px 12px; border-top: 1px solid var(--line); }
+.tbl th { font-family: var(--font-ui) !important; font-size: 12.5px !important; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); background: var(--accent-soft); font-weight: 600; }
+.tbl tbody th { text-transform: none; letter-spacing: 0; font-size: 14px !important; color: var(--ink); background: transparent; }
+.tbl td { font-size: 16px !important; line-height: 1.5 !important; }
+.tbl.narrow table { min-width: 0; }
+
+.fig { margin: 0; border: 1px solid var(--line-strong); background: var(--paper); padding: 14px; }
+.fig svg { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; }
+.fig figcaption { font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+.dg text { fill: var(--ink); font-family: var(--font-ui); font-size: 12px; text-anchor: middle; }
+.dg text.sm { font-size: 11.5px; }
+.dg text.mono { font-family: var(--font-mono); font-size: 12px; }
+.dg text.mute { fill: var(--ink-3); }
+.dg text.start { text-anchor: start; }
+.dg text.end { text-anchor: end; }
+.dg text.halo { paint-order: stroke; stroke: var(--paper); stroke-width: 5px; stroke-linejoin: round; }
+.dg .n { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.5; }
+.dg .hub { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.dg .term { fill: var(--ink); stroke: var(--ink); }
+.dg .l { stroke: var(--ink-3); stroke-width: 1.5; fill: none; }
+.dg .l.bold { stroke: var(--ink); stroke-width: 3; }
+.dg .l.dash { stroke-dasharray: 4 4; }
+.dg .l.acc { stroke: var(--accent); stroke-width: 1.8; }
+.dg .ahp { fill: var(--accent); }
+
+.example { border: 1px dashed var(--line-strong); padding: 12px 14px; background: var(--paper); }
+.note { border: 1px dashed var(--note-line); background: var(--note-bg); padding: 12px 14px; }
+.note .label { color: var(--ink-2); }
+.note p { font-size: 16px !important; }
+.take { border-top: 2px solid var(--accent); background: var(--accent-soft); padding: 14px 16px; }
+.take .label { color: var(--accent); }
+.take li { font-size: 17px !important; }
+
+/* Search */
+.search-box { display: none; padding: 0 0 12px; max-width: 1180px; margin: 0 auto; }
+.search-box.open { display: block; }
+.search-box input { width: 100%; min-height: 46px; padding: 0 14px; border: 1px solid var(--line-strong); background: var(--bg); border-radius: 4px; }
+.results { list-style: none; margin: 8px 0 0; padding: 0; max-height: 52vh; overflow-y: auto; border: 1px solid var(--line); background: var(--paper); }
+.results:empty { display: none; }
+.results button { display: block; width: 100%; text-align: left; padding: 10px 14px; border: 0; border-top: 1px solid var(--line); background: none; min-height: 48px; }
+.results li:first-child button { border-top: 0; }
+.results button:hover { background: var(--accent-soft); }
+.results .r-t { font-weight: 600; font-size: 15px; }
+.results .r-l { font-size: 12.5px; color: var(--ink-3); }
+.results .r-s { font-size: 13.5px; color: var(--ink-2); margin-top: 2px; }
+.empty-msg { padding: 12px 14px; color: var(--ink-2); font-size: 14px; border: 1px solid var(--line); background: var(--paper); margin-top: 8px; }
+
+/* Quiz */
+.quiz { max-width: 720px; }
+.quiz h1 { margin-bottom: 6px; }
+.filter { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin: 18px 0; padding: 14px; border: 1px solid var(--line-strong); background: var(--paper); }
+.filter label { display: block; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--ink-3); margin-bottom: 4px; }
+.filter select { min-height: 46px; width: min(100%, 360px); padding: 0 10px; border: 1px solid var(--line-strong); background: var(--bg); border-radius: 4px; }
+.filter .count { font-size: 14px; color: var(--ink-2); padding-bottom: 12px; }
+.q-meta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-3); margin-bottom: 8px; }
+.q-meta b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--line); margin-bottom: 18px; }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.2s; }
+.q-tag { font-family: var(--font-mono); font-size: 12px; color: var(--accent); margin: 0 0 6px; }
+.q-text { font-family: var(--font-read); font-size: 21px; line-height: 1.4; margin: 0 0 16px; font-weight: 500; }
+.opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.opt {
+  display: flex; gap: 12px; align-items: flex-start; width: 100%; text-align: left; padding: 12px 14px; min-height: 52px; border: 1px solid var(--line-strong); background: var(--paper); border-radius: 4px; font-size: 16.5px; line-height: 1.4;
+}
+.opt .k { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; font-family: var(--font-mono); font-size: 12.5px; margin-top: 0; }
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[aria-checked="true"] .k { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.opt.right { border-color: var(--good); background: var(--good-bg); }
+.opt.right .k { background: var(--good); color: var(--paper); border-color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.opt.wrong .k { background: var(--bad); color: var(--paper); border-color: var(--bad); }
+.opt[disabled] { cursor: default; color: var(--ink); }
+.opt .tag { margin-left: auto; flex: none; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding-left: 8px; }
+.opt.right .tag { color: var(--good); }
+.opt.wrong .tag { color: var(--bad); }
+.feedback { margin-top: 16px; padding: 14px 16px; border: 1px solid var(--line-strong); background: var(--paper); }
+.feedback.ok { border-color: var(--good); background: var(--good-bg); }
+.feedback.no { border-color: var(--bad); background: var(--bad-bg); }
+.feedback h3 { margin: 0 0 4px; font-size: 16px; }
+.feedback p { margin: 0; font-family: var(--font-read); font-size: 17px; line-height: 1.55; }
+.q-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.q-actions .btn { flex: 1 1 140px; }
+.score { border: 1px solid var(--line-strong); background: var(--paper); padding: 20px; }
+.score .big { font-size: 56px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+.score .big small { font-size: 22px; color: var(--ink-3); font-weight: 400; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 16px 0; }
+.stats div { border: 1px solid var(--line); padding: 10px 12px; }
+.stats b { display: block; font-size: 24px; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 12.5px; color: var(--ink-3); }
+.review { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+.review li { border: 1px solid var(--line); background: var(--paper); padding: 12px 14px; }
+.review li.ok { border-left: 4px solid var(--good); }
+.review li.no { border-left: 4px solid var(--bad); }
+.review .rq { font-family: var(--font-read); font-size: 17px; margin: 2px 0 8px; }
+.review .ra { font-size: 14.5px; color: var(--ink-2); margin: 2px 0; }
+.review .ra b { color: var(--ink); }
+.review .rw { font-family: var(--font-read); font-size: 15.5px; color: var(--ink-2); margin-top: 8px; }
+.review .rt { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+
+.to-top { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.18); }
+.to-top[hidden] { display: none !important; }
+.state { padding: 40px 0; color: var(--ink-2); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .rail, .bar > i { transition: none; } }
+
+.scrim { position: fixed; inset: 0; z-index: 65; background: rgba(10, 20, 18, 0.45); }
+.rail.open { box-shadow: none; }
+@media (min-width: 960px) { .scrim { display: none !important; } #closeRail { display: none; } }
+.btn .short { display: inline; } .btn .long { display: none; }
+@media (min-width: 560px) { .btn .short { display: none; } .btn .long { display: inline; } }
+</style>
+<header class="top">
+  <div class="top-row">
+    <button class="btn" id="menuBtn" aria-controls="rail" aria-expanded="false">Menu</button>
+    <div class="brand">Network Principles<small>Study and revision</small></div>
+    <button class="btn" id="searchBtn" aria-expanded="false" aria-controls="searchBox">Search</button>
+    <button class="btn primary" id="quizBtn"><span class="short">Test</span><span class="long">Test Yourself</span></button>
+  </div>
+  <div class="search-box" id="searchBox">
+    <label class="sr" for="searchInput">Search the lectures</label>
+    <input id="searchInput" type="search" placeholder="Search topics, terms and protocols" autocomplete="off">
+    <div id="searchMsg" aria-live="polite"></div>
+    <ul class="results" id="results"></ul>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+</header>
+<div class="shell">
+  <aside class="rail" id="rail" aria-label="Lecture navigation"></aside>
+  <main id="view"><p class="state">Loading lectures…</p></main>
+</div>
+<div class="scrim" id="scrim" hidden></div>
+<button class="btn to-top" id="toTop" hidden>Back to top</button>
+<script>
+/* Content helpers: lecture data is plain data built with these constructors. */
+const LECTURES = [];
+const P = (x) => ({ t: "p", x });
+const DEF = (...items) => ({ t: "def", items });
+const LIST = (title, items) => ({ t: "list", title, items });
+const STEPS = (title, items) => ({ t: "steps", title, items });
+const TABLE = (caption, head, rows) => ({ t: "table", caption, head, rows });
+const PROS = (pros, cons) => ({ t: "pros", pros, cons });
+const NOTE = (x) => ({ t: "note", x });
+const DIAG = (id, caption) => ({ t: "diagram", id, caption });
+const EX = (x) => ({ t: "example", x });
+const TAKE = (...items) => ({ t: "take", items });
+const T = (id, title, source, ...blocks) => ({ id, title, source, blocks });
+
+LECTURES.push({
+  id: 1,
+  title: "Networks and Network Media",
+  blurb: "What a computer network is, the roles of its components, and the three kinds of network media: copper, fiber optic and wireless.",
+  topics: [
+    T("computer-networking", "Computer Networking", "Slides: Computer Networking; Networks have changed everything",
+      P("The course opens by defining computer networking and by listing the areas of life that networks have changed. Everything later in the course builds on this idea of devices that communicate with one another."),
+      DEF(["Computer networking", "Connected computing devices (such as laptops, desktops, servers, smartphones, and tablets) and an ever-expanding array of IoT devices (such as cameras, door locks, audio/visual systems, thermostats, and various sensors) that communicate with one another."]),
+      LIST("Networks have changed everything", [
+        "**Learn:** changing the way we learn.",
+        "**Communicate:** changing the way we communicate. The slides list Instant Messaging (IM) / Texting, Social Media / Wikis / Podcasting, and Peer-to-Peer (P2P) File Sharing.",
+        "**Work:** changing the way we work.",
+        "**Play:** changing the way we play."
+      ]),
+      TAKE("A network is a set of connected devices that communicate with one another.", "The devices include computers, phones and servers as well as IoT devices such as cameras, door locks and thermostats.", "Networks changed four things: how we learn, communicate, work and play.")
+    ),
+    T("daily-life", "Role of Networks in Daily Life", "Slide: Role of Networks on our daily life",
+      P("The lecture lists nine ways in which networks play a role in everyday life. The slide gives the list only, with a single example (online banking) under money management."),
+      LIST("The nine roles listed", [
+        "Education",
+        "Speed up daily tasks",
+        "Online shopping",
+        "Research & development",
+        "Business promotion",
+        "Communication",
+        "Digital transactions",
+        "Money management (example: online banking)",
+        "Tour & travel"
+      ]),
+      TAKE("Remember the nine areas: education, daily tasks, online shopping, research & development, business promotion, communication, digital transactions, money management and tour & travel.")
+    ),
+    T("network-structure", "Network Structure: Components", "Slides: Network Structure (components, end devices, intermediary devices, network media)",
+      P("The slides split a network into components. A network has hardware and software, and its devices fall into two roles: end devices and intermediary devices. The path that a message travels is called the network media."),
+      DEF(
+        ["Network components", "The parts a network is made of. The slides name two groups: **hardware** and **software**."],
+        ["End device", "A device that forms the interface between the human network and the communications network. Examples given: computer, printer, mobile."],
+        ["Intermediary device", "A device that provides connectivity and ensures data flows across the network. Examples given: router and switch."],
+        ["Network media", "The channel over which a message travels."]
+      ),
+      LIST("Important points", [
+        "End devices are where people meet the network (computer, printer, mobile).",
+        "Intermediary devices keep data flowing (router, switch).",
+        "Network media is the channel; the three media types are copper, fiber optic and wireless."
+      ]),
+      NOTE("The slides name “software” as a component but do not explain it further."),
+      TAKE("Components: hardware and software.", "**End devices** are the interface to people; **intermediary devices** (router, switch) keep data flowing.", "**Network media** is the channel a message travels over.")
+    ),
+    T("copper-media", "Copper Media: Coaxial, STP and UTP", "Slides: Copper Media; Coaxial Cable; Twisted-Pair cable; STP; UTP",
+      P("Copper media has three cable types in the lecture: **Coaxial Cable**, **Shielded Twisted Pair (STP)** and **Unshielded Twisted Pair (UTP)**. Twisted-pair cable (TP) is made of pairs of insulated copper wire twisted around one another, and it comes in two types: shielded and unshielded."),
+      DEF(
+        ["Shielded twisted pair (STP)", "Contains pairs of insulated wire, each pair enclosed within a foil shield, and all of the pairs are inside an insulating sheath."],
+        ["Unshielded twisted pair (UTP)", "A popular type of cable that contains pairs of insulated wire within an insulating sheath."]
+      ),
+      TABLE("Copper cable comparison (values as given on the slides)", ["", "Coaxial", "STP", "UTP"], [
+        ["Speed and throughput", "10-100 Mbps", "10-100 Mbps", "10-100-1000 Mbps (depending on the quality/category of cable)"],
+        ["Cost", "Cheap", "Moderately expensive", "Least expensive"],
+        ["Maximum cable length", "500 m", "100 m", "100 m"]
+      ]),
+      LIST("Important points", [
+        "STP is used in older telephone networks and in data communications to reduce outside interference.",
+        "UTP is considered the **fastest copper-based medium** today.",
+        "UTP is used extensively for **LANs** and telephone connections.",
+        "Coaxial cable allows the longest maximum length of the three (500 m)."
+      ]),
+      NOTE("For coaxial cable the slide gives only speed, cost and maximum length. It does not describe its construction."),
+      TAKE("Coaxial: 10-100 Mbps, cheap, 500 m.", "STP: 10-100 Mbps, moderately expensive, 100 m, foil shield per pair.", "UTP: up to 1000 Mbps depending on category, least expensive, 100 m, fastest copper medium.")
+    ),
+    T("fiber-optic", "Fiber Optic Cable", "Slides: Fiber Optic; Advantages and Disadvantages; Properties of Fiber Optic Cabling",
+      P("Fiber-optic cable carries data in a different way from copper. Instead of electrical signals in metal wire, it uses light."),
+      DEF(["Fiber-optic cable", "Cable that uses light pulses conducted through special glass conductors to carry data."]),
+      PROS([
+        "Much greater bandwidth than metal cables, so it can carry more data.",
+        "Less susceptible than metal cables to interference.",
+        "Much thinner and lighter than metal wires.",
+        "Data can be transmitted digitally (the natural form for computer data) rather than analogically."
+      ], [
+        "Expensive to install.",
+        "More fragile than wire.",
+        "Difficult to splice."
+      ]),
+      LIST("Industries using fiber-optic cabling (four types)", [
+        "Enterprise Networks",
+        "Fiber-to-the-home (FTTH) and Access Networks",
+        "Long-Haul Networks",
+        "Submarine Networks"
+      ]),
+      NOTE("A slide titled “Network Fiber Connectors” contains only images, so no connector names or details can be taken from the text."),
+      TAKE("Fiber carries data as light pulses through glass.", "Strengths: bandwidth, resistance to interference, thin and light, digital transmission.", "Weaknesses: costly to install, fragile, hard to splice.")
+    ),
+    T("fiber-vs-copper", "Fiber versus Copper", "Slide: Fiber versus Copper",
+      P("The lecture compares the two cable families across seven implementation issues. Fiber is stronger on bandwidth, distance and immunity, while copper is lower on cost, installation skill and safety precautions."),
+      TABLE("Fiber versus copper (as given on the slide)", ["Implementation issue", "Copper media", "Fiber optic"], [
+        ["Bandwidth supported", "10 Mbps – 10 Gbps", "10 Mbps – 100 Gbps"],
+        ["Distance", "Relatively short (1 – 100 meters)", "Relatively high (1 – 100,000 meters)"],
+        ["Immunity to EMI and RFI", "Low", "High (completely immune)"],
+        ["Immunity to electrical hazards", "Low", "High (completely immune)"],
+        ["Media and connector costs", "Lowest", "Highest"],
+        ["Installation skills required", "Lowest", "Highest"],
+        ["Safety precautions", "Lowest", "Highest"]
+      ]),
+      LIST("Important points", [
+        "Maximum bandwidth: copper **10 Gbps**, fiber **100 Gbps**.",
+        "Distance: copper 1 – 100 meters, fiber 1 – 100,000 meters.",
+        "Fiber costs more, needs more installation skill and more safety precautions than copper."
+      ]),
+      TAKE("Fiber wins on bandwidth, distance and immunity to EMI/RFI and electrical hazards.", "Copper wins on cost, installation skill and safety precautions (all lowest).")
+    ),
+    T("wireless-media", "Wireless Media", "Slides: Wireless Media; Advantages and Disadvantages; Types of Wireless Media",
+      P("Wireless media sends data without physical cabling. The slides describe where it is useful, what it needs on the device, and where its problems lie."),
+      DEF(["Wireless communication", "Uses radio frequencies (RF) or infrared (IR) waves to transmit data between devices on a LAN."]),
+      LIST("Important points", [
+        "Does not require physical cabling.",
+        "Particularly useful for remote access for laptop users.",
+        "Eliminates cable faults and cable breaks.",
+        "Has signal interference and security issues.",
+        "To receive signals from the access point, a PC or laptop must install a **wireless adapter card (wireless NIC)**."
+      ]),
+      PROS([
+        "Portability.",
+        "The network can be expanded without disruption to current users.",
+        "Save money.",
+        "Ease of use."
+      ], [
+        "Limited speed in comparison to other network topologies (wording as on the slide).",
+        "Potential security issues associated with wireless transmissions."
+      ]),
+      LIST("Areas of concern", ["Coverage area", "Interference", "Security"]),
+      NOTE("A slide titled “Types of Wireless Media” has no text, so the specific wireless types cannot be listed from the lecture."),
+      TAKE("Wireless uses **RF or IR** waves and needs a **wireless NIC** to reach the access point.", "Advantages: portability, easy expansion, saves money, ease of use.", "Concerns: coverage area, interference, security.")
+    )
+  ]
+});
+
+LECTURES.push({
+  id: 2,
+  title: "Network Size, Topologies and Classification",
+  blurb: "The six network sizes, the six topologies with their advantages and disadvantages, Internet / Intranet / Extranet, peer-to-peer and client-server networks, and the characteristics of a reliable network.",
+  topics: [
+    T("network-size", "Network Size: Overview", "Slide: Network Size; Types of Networks in Use Today",
+      P("Networks come in all sizes. They can range from simple networks consisting of two devices to networks connecting millions of devices. The lecture names six types of network in use today."),
+      LIST("The six network types", [
+        "**PAN:** Personal Area Network",
+        "**LAN:** Local Area Network",
+        "**CAN:** Campus Area Network",
+        "**MAN:** Metropolitan Area Network",
+        "**WAN:** Wide Area Network",
+        "**SAN:** Storage-Area Network"
+      ]),
+      TAKE("Network size ranges from two devices to millions of devices.", "Six types: PAN, LAN, CAN, MAN, WAN, SAN.")
+    ),
+    T("lan-wan", "LAN and WAN", "Slides: Local Area Networks (LAN); Wide Area Networks (WAN)",
+      P("A LAN covers a limited area and is usually run by one organization or individual. A WAN spans a wide geographical area and is run by service providers. The two are contrasted below."),
+      DEF(
+        ["Local Area Network (LAN)", "A network serving a home, building or campus. LANs interconnect end devices in a limited area such as a home, school, office building, or campus."],
+        ["Wide Area Network (WAN)", "A network infrastructure that spans a wide geographical area."]
+      ),
+      TABLE("LAN compared with WAN (as described on the slides)", ["", "LAN", "WAN"], [
+        ["Area", "Limited area: home, school, office building, campus", "Wide area: between cities, states, provinces, countries, or continents"],
+        ["Administration", "Usually a single organization or individual", "Usually multiple service providers; typically managed by service providers (SP) or Internet Service Providers (ISP)"],
+        ["Speed", "High speed bandwidth to internal end devices and intermediary devices", "Typically slower speed links between LANs"],
+        ["Role", "Interconnects end devices", "Interconnects LANs"]
+      ]),
+      LIST("Important points", [
+        "In a LAN, the administrative control that governs security and access control policies is enforced at the network level.",
+        "A WAN interconnects LANs over wide geographical areas."
+      ]),
+      TAKE("LAN: limited area, one administrator, high speed.", "WAN: wide area, service providers, slower links between LANs.")
+    ),
+    T("man-can", "MAN and CAN", "Slides: Metropolitan Area Networks (MAN); Campus Area Networks (CAN)",
+      P("A MAN and a CAN both sit between a single LAN and a WAN in size. A MAN is described by geography (a city), while a CAN is described by the place it covers (a campus)."),
+      DEF(
+        ["Metropolitan Area Network (MAN)", "A collection of LANs within the same geographical area, for instance a city. It is also described as a network of computers located at different sites within a large physical area, such as a city."],
+        ["Campus Area Network (CAN)", "A network that covers an educational or corporate campus."]
+      ),
+      LIST("MAN: important points", [
+        "Often acts as a high speed network (although not as fast as LAN) to allow sharing of regional resources.",
+        "Can be defined as a group of computers and network devices connected together within a large physical area."
+      ]),
+      EX("The slide gives this example: companies such as banks that have several branches within Kuala Lumpur city might find a MAN useful."),
+      LIST("CAN: important points", [
+        "Examples: elementary schools, university campuses, and corporate buildings.",
+        "Larger than a LAN, since it may span multiple buildings within a specific area.",
+        "Most CANs consist of several LANs connected via switches and routers that combine to create a single network.",
+        "Operates similarly to a LAN: users with access (wired or wireless) can communicate directly with other systems within the network."
+      ]),
+      TAKE("MAN = LANs in the same geographical area such as a city; fast, but not as fast as a LAN.", "CAN = a campus network; several LANs joined by switches and routers; larger than one LAN.")
+    ),
+    T("san-pan", "SAN and PAN", "Slides: Storage Area Networks (SAN); Personal Area Networks (PAN)",
+      DEF(
+        ["Storage Area Network (SAN)", "A high-speed data transmission technology used to connect multiple hosts and storage devices over fiber-optic or copper cables."],
+        ["Personal Area Network (PAN)", "A computer network used for communication among computer devices close to one person."]
+      ),
+      LIST("Benefits of a SAN environment", [
+        "Storage consolidation",
+        "Concurrent access by multiple hosts",
+        "Use in disaster recovery applications",
+        "Reduced total cost of ownership",
+        "Reduction of management complexity/overhead",
+        "Improved availability",
+        "Scalability",
+        "Improved data protection",
+        "Increased capacity usage"
+      ]),
+      EX("Devices that may be used in a PAN (from the slide): printers, fax machines, telephones, PDAs (Personal Digital Assistant) or scanners."),
+      TAKE("SAN connects hosts and storage devices over fiber-optic or copper cables.", "PAN is for devices close to one person.")
+    ),
+    T("topology-intro", "Network Topology: Overview", "Slide: Network Topology",
+      P("The lecture presents six topologies: bus, ring, star, tree, mesh and hybrid. First it defines what a topology is."),
+      DEF(
+        ["Topology", "A way of “laying out” the network. Network topologies describe the ways in which the elements of a network are mapped, and they describe the physical and logical arrangement of the network nodes."],
+        ["Physical topology", "Refers to the configuration of cables, computers, and other peripherals."]
+      ),
+      TAKE("Topology = how the network is laid out (physical and logical arrangement of nodes).", "Six topologies: Bus, Ring, Star, Tree, Mesh, Hybrid.")
+    ),
+    T("bus", "Bus Topology", "Slides: Network Topology 1. Bus Topology (and advantages / disadvantages)",
+      P("In a bus topology every node shares one single cable. It is a simple and cheap layout, which is why it is popular on LANs."),
+      DEF(["Bus topology", "All the nodes (file server, workstations, and peripherals) are connected by one single cable. It consists of a main run of cable with a terminator at each end, and all nodes are connected to the linear cable."]),
+      DIAG("bus", "A single main cable with a terminator at each end. Every node connects to that one cable."),
+      PROS([
+        "Cheap, easy to handle and implement.",
+        "Requires less cable.",
+        "Best suited for small networks."
+      ], [
+        "The cable length is limited, which limits the number of stations that can be connected.",
+        "Performs well only for a limited number of nodes."
+      ]),
+      LIST("Important points", ["Popular on LANs because it is inexpensive and easy to install."]),
+      TAKE("One cable, a terminator at each end.", "Cheap and simple, but limited cable length means limited nodes.")
+    ),
+    T("ring", "Ring Topology", "Slides: Network Topology 2. Ring Topology (and advantages / disadvantages)",
+      P("In a ring each device has exactly two neighbors and messages travel in one direction around the loop. Because it is a loop, a break in it is serious."),
+      DEF(["Token", "A small data packet that is continuously passed around the ring network (used by Token Ring technology)."]),
+      DIAG("ring", "Each device has exactly two neighbors, and all messages travel around the ring in the same direction."),
+      LIST("Important points", [
+        "Every device has exactly two neighbors for communication purposes.",
+        "All messages travel through the ring in the same direction.",
+        "A failure in any cable or device breaks the loop and can take down the entire network.",
+        "A ring network is implemented with **Token Ring** technology."
+      ]),
+      STEPS("How the token is used (from the slide)", [
+        "A token, or small data packet, is continuously passed around the network.",
+        "When a device needs to transmit, it reserves the token for the next trip around.",
+        "It then attaches its data packet to the token."
+      ]),
+      PROS([
+        "Very orderly network where every device has access to the token and the opportunity to transmit.",
+        "Easier to manage than a bus network.",
+        "Good communication over long distances.",
+        "Handles high volume of traffic."
+      ], [
+        "The failure of a single node can cause the entire network to fail.",
+        "Movement or changes made to network nodes affect the performance of the entire network."
+      ]),
+      TAKE("Two neighbors per device, one direction, token passing.", "Orderly and handles high traffic, but one failure can bring the whole ring down.")
+    ),
+    T("star", "Star Topology", "Slides: Network Topology 3. Star Topology (and advantages / disadvantages)",
+      P("In a star network every node connects to a central device. All data passes through that centre, which makes the network easy to manage but makes the centre a critical point."),
+      DEF(["Star topology", "Each node (file server, workstations, and peripherals) is connected to a central device called a hub."]),
+      DIAG("star", "Every node connects to the central device. Data passes through the hub, switch, or concentrator before continuing to its destination."),
+      LIST("Important points", [
+        "The hub takes a signal that comes from any node and passes it along to all the other nodes in the network.",
+        "Data passes through the hub, switch, or concentrator before continuing to its destination.",
+        "The hub, switch, or concentrator manages and controls all functions of the network.",
+        "The star topology reduces the chance of network failure by connecting all of the systems to a central node."
+      ]),
+      PROS([
+        "Easy to manage.",
+        "Easy to locate problems (cable/workstations).",
+        "Easier to expand than a bus or ring topology.",
+        "Easy to install and wire.",
+        "Easy to detect faults and to remove parts."
+      ], [
+        "Requires more cable length than a linear topology.",
+        "If the hub or concentrator fails, the nodes attached are disabled.",
+        "More expensive because of the cost of the concentrators."
+      ]),
+      TAKE("Central hub, switch or concentrator controls the network.", "Easy to manage and expand, but if the hub fails its attached nodes are disabled.")
+    ),
+    T("tree", "Tree Topology", "Slides: Network Topology 4. Tree Topology (and advantages / disadvantages)",
+      P("A tree topology builds a hierarchy out of star networks. The slides say this is particularly helpful for colleges, universities and schools."),
+      DEF(["Tree topology (hierarchical topology)", "Can be viewed as a collection of star networks arranged in a hierarchy."]),
+      DIAG("tree", "Star networks arranged in a hierarchy. Each level connects down to the next."),
+      LIST("Important points", [
+        "Individual peripheral nodes only transmit to and receive from one other node and are not required to act as repeaters or regenerators.",
+        "Links and nodes are arranged into distinct hierarchies, allowing greater control and easier troubleshooting.",
+        "Particularly helpful for colleges, universities and schools so that each of them connects to the big network in some way."
+      ]),
+      PROS([
+        "Point-to-point wiring for individual segments.",
+        "Supported by several hardware and software vendors.",
+        "All the computers have access to the larger network and their immediate networks."
+      ], [
+        "Overall length of each segment is limited by the type of cabling used.",
+        "If the backbone line breaks, the entire segment goes down.",
+        "More difficult to configure and wire than other topologies."
+      ]),
+      TAKE("Tree = stars arranged in a hierarchy.", "Greater control and easier troubleshooting, but a broken backbone line takes down the whole segment.")
+    ),
+    T("mesh", "Mesh Topology", "Slides: Network Topology 5. Mesh Topology (and advantages / disadvantages)",
+      P("In a mesh every node is connected to every other node. This gives many possible paths but makes cabling expensive and complex."),
+      DEF(["Mesh topology", "Each node is connected to every other node in the network."]),
+      DIAG("mesh", "Every node has a direct link to every other node, so each node can reach a destination through multiple paths."),
+      LIST("Important points", [
+        "Implementing a mesh is expensive and difficult.",
+        "Each node may send a message to its destination through multiple paths.",
+        "Data on a mesh network is automatically configured to take the **shortest route**, meaning the least number of hops."
+      ]),
+      PROS([
+        "No traffic problem, as there are dedicated links.",
+        "Multiple links, so if one route is blocked other routes can be used.",
+        "Point-to-point links make fault identification easy."
+      ], [
+        "The mesh of wiring can be difficult to manage.",
+        "Installation is complex, as each node is connected to every node.",
+        "Cabling cost is high."
+      ]),
+      TAKE("Every node linked to every other node; data takes the shortest route (fewest hops).", "Very reliable paths, but expensive and complex to wire.")
+    ),
+    T("hybrid", "Hybrid Topology", "Slides: Network Topology 6. Hybrid Topology (and advantages / disadvantages)",
+      DEF(["Hybrid topology", "A combination of any two or more network topologies."]),
+      LIST("Important points", [
+        "A hybrid topology always occurs when two different basic network topologies are connected (the slide spells this “accrues”).",
+        "It is a mixture of the topologies above.",
+        "Usually, a central computer is attached with sub-controllers, which in turn participate in a variety of topologies."
+      ]),
+      PROS(["Extremely flexible.", "Very reliable."], ["Expensive."]),
+      NOTE("The slides do not give a specific arrangement for a hybrid topology, so no diagram is shown for it."),
+      TAKE("Hybrid = two or more topologies combined.", "Flexible and reliable, but expensive.")
+    ),
+    T("topology-compare", "Comparing the Topologies", "Summary built from the topology slides",
+      P("This table only regroups statements already given in the topology topics above. It is a revision aid, not new material."),
+      TABLE("Topology summary (from the slides)", ["Topology", "Key idea", "A main weakness named"], [
+        ["Bus", "One single cable with a terminator at each end", "Cable length is limited, which limits the number of stations"],
+        ["Ring", "Every device has exactly two neighbors; messages travel one way; token", "Failure of a single node or cable can fail the entire network"],
+        ["Star", "Each node connects to a central hub, switch or concentrator", "If the hub or concentrator fails, attached nodes are disabled"],
+        ["Tree", "A collection of star networks arranged in a hierarchy", "If the backbone line breaks, the entire segment goes down"],
+        ["Mesh", "Each node connected to every other node", "Cabling cost is high; installation is complex"],
+        ["Hybrid", "A combination of any two or more topologies", "Expensive"]
+      ])
+    ),
+    T("internet-classification", "Internet, Intranet and Extranet", "Slides: Another approach for Network Classification; Intranet & Extranet",
+      P("Besides size, networks can be classified in another way. The lecture defines the Internet and then names two similar terms."),
+      DEF(["Internet", "A global mesh of interconnected networks. It is a worldwide collection of interconnected networks (internetworks, or internet for short)."]),
+      NOTE("The slide “Intranet & Extranet” only says that these two terms are similar to the term Internet. The text of the lecture does not define either of them."),
+      TAKE("The Internet is a worldwide collection of interconnected networks.", "Intranet and Extranet are named as related terms but are not defined in the text.")
+    ),
+    T("p2p", "Peer-to-Peer Networks", "Slides: Peer-to-Peer Networks; Peer-to-Peer Applications; Common P2P Applications",
+      P("In a peer-to-peer (P2P) network the two devices are equals. Whether a device acts as client or server is decided for each request."),
+      DEF(["Peer-to-peer (P2P) network", "Both devices are considered equal in the communication. The roles of client and server are set on a per request basis."]),
+      LIST("Important points", [
+        "Client and server are in the same communication.",
+        "Both can initiate a communication and are considered equal in the communication process.",
+        "With P2P applications, each computer running the application can act as a client or a server for the other computers running it.",
+        "Some P2P applications are based on the **Gnutella protocol**, which enables people to share files on their hard disks with others."
+      ]),
+      LIST("Common P2P applications (listed)", ["eDonkey", "eMule", "Shareaza", "BitTorrent", "Bitcoin", "LionShare"]),
+      TAKE("P2P: both devices are equal; client or server role is set per request.", "Any computer running the application can be a client or a server.")
+    ),
+    T("client-server-isp", "Client-Server Model, ISP and Converged Networks", "Slides: Client-Server Model; Internet Service Provider (ISP); Converged Networks",
+      P("The client-server model and converged networks are slide titles whose content is shown as images. The ISP slide has explanatory text."),
+      DEF(["Internet Service Provider (ISP)", "The provider that home users, teleworkers, and small offices typically need a connection to in order to access the Internet."]),
+      LIST("Important points about connecting to the Internet", [
+        "There are many different ways to connect users and organizations to the Internet.",
+        "Connection options vary greatly between ISP and geographical location.",
+        "Popular choices: **broadband cable**, **broadband digital subscriber line (DSL)**, **wireless WANs**, and **mobile services**."
+      ]),
+      NOTE("The slides titled “Client-Server Model” (two slides) and “Converged Networks” contain no explanatory text, so they are not explained here."),
+      TAKE("Home users, teleworkers and small offices connect to the Internet through an ISP.", "Popular options: broadband cable, DSL, wireless WANs, mobile services.")
+    ),
+    T("architecture", "Network Architecture Characteristics", "Slides: Network Architecture Characteristics; Reliable Network; Fault tolerance",
+      P("A reliable network is one whose architecture design addresses four characteristics."),
+      LIST("Characteristics addressed by network architecture design", [
+        "**Fault tolerance**",
+        "**Scalability**",
+        "**Quality of service**",
+        "**Security**"
+      ]),
+      NOTE("The slide titled “Fault tolerance” contains no text, so the four characteristics are named in the lecture but not explained."),
+      TAKE("Four characteristics of a reliable network: fault tolerance, scalability, quality of service, security.")
+    )
+  ]
+});
+
+LECTURES.push({
+  id: 3,
+  title: "Protocols, Layered Models and Application Services",
+  blurb: "How messages are communicated, what protocols and standards are, the layered models, addressing, ping, and the application layer services: HTTP, email protocols, DNS, DHCP, FTP and SMB.",
+  topics: [
+    T("communication-elements", "Elements of Communication", "Slides: The elements of communication; How messages are communicated; Network Components",
+      P("The lecture starts from the basic parts of any communication and then says how data moves across a network."),
+      LIST("Three common elements of communication", ["**Message source**", "**The channel**", "**Message destination**"]),
+      DEF(
+        ["Network", "Data or information networks capable of carrying many different types of communications."],
+        ["Segments", "Data is sent across a network in small “chunks” called segments."]
+      ),
+      NOTE("The slide “Network Components: Describe network representations” has no text beyond its title."),
+      TAKE("Source, channel and destination are the three elements of communication.", "Data crosses the network in small chunks called segments.")
+    ),
+    T("protocols", "Protocols and Standards", "Slides: Function of Protocol in Network Communication",
+      P("Devices can only communicate successfully if they follow agreed rules. These rules are protocols, and the lecture also covers standards and why protocols are independent of technology."),
+      DEF(
+        ["Protocol", "A set of predetermined rules."],
+        ["Network protocols", "Used to allow devices to communicate successfully."],
+        ["Standard", "A process or protocol that has been endorsed by the networking industry and ratified by a standards organization."]
+      ),
+      LIST("Technology independent protocols", [
+        "Many diverse types of devices can communicate using the same sets of protocols.",
+        "This is because protocols specify network **functionality**, not the underlying technology to support this functionality."
+      ]),
+      NOTE("The slide “Different protocols and how they interact” is a title only. Protocol suites are named as a heading but not explained in the text."),
+      TAKE("Protocol = a set of predetermined rules that lets devices communicate.", "Standard = endorsed by the industry and ratified by a standards organization.", "Protocols define functionality, not technology.")
+    ),
+    T("layered-models", "Layered Models: TCP/IP and OSI", "Slides: Layers with TCP/IP and OSI Model",
+      P("Network communication is described with layered models. The lecture gives the benefits of layering and two kinds of model. Most of the model diagrams in the slides are images, so only the text of the slides is covered here."),
+      LIST("Benefits of using a layered model", [
+        "Assists in protocol design.",
+        "Fosters improvement.",
+        "Changes in one layer do not affect other layers.",
+        "Provides a common language."
+      ]),
+      DEF(
+        ["Protocol model", "Provides a model that closely matches the structure of a particular protocol suite."],
+        ["Reference model", "Provides a common reference for maintaining consistency within all types of network protocols and services."]
+      ),
+      LIST("Important points", [
+        "The lecture presents the **TCP/IP model** and the **OSI model** and compares them.",
+        "The slide on revisiting both models says the key parallels are in the **transport** and **network** layers."
+      ]),
+      NOTE("The slides titled TCP/IP Model, Communication Process, Protocol data units (PDU) and encapsulation, Process of sending and receiving messages, OSI Model and Comparison between OSI and TCP/IP model have no extractable text. The layer lists and the PDU names are therefore not reproduced here."),
+      TAKE("Layering helps protocol design, fosters improvement, isolates changes to one layer and gives a common language.", "A protocol model matches a specific protocol suite; a reference model provides a common reference.")
+    ),
+    T("addressing-naming", "Addressing and Naming Schemes", "Slides: Addressing and Naming Schemes",
+      P("Encapsulation headers carry the labels that manage communication in data networks."),
+      LIST("Important points", [
+        "Encapsulation headers are used to manage communication in data networks.",
+        "Examples given: **Ethernet MAC addresses**, **IP addresses**, and **TCP/UDP port numbers**.",
+        "Labels in encapsulation headers manage communication.",
+        "Information in the encapsulation header is used to identify the **source and destination processes** for data communication."
+      ]),
+      TAKE("Headers hold labels: MAC addresses, IP addresses and TCP/UDP port numbers.", "The header information identifies the source and destination processes.")
+    ),
+    T("ping", "Ping", "Slide: Ping",
+      DEF(["Ping", "A utility used to verify Internet connectivity."]),
+      LIST("What the ping command tests", [
+        "The **NIC transmit/receive** function.",
+        "The **TCP/IP configuration**.",
+        "**Network connectivity**."
+      ]),
+      TAKE("Ping verifies connectivity and tests the NIC, the TCP/IP configuration and the network.")
+    ),
+    T("app-pres-session", "Application, Presentation and Session Layers", "Slides: Application, Session and Presentation; Presentation and Session Layers",
+      P("These three OSI layers sit above the transport layer. The slides explain the presentation and session layers in text."),
+      DEF(
+        ["Presentation layer", "Handles coding and conversion of application layer data, data compression, and data encryption for the transmission and decryption of data upon receipt by the destination."],
+        ["Session layer", "Creates and maintains dialogs between source and destination applications. It handles the exchange of information to initiate dialogs, keep them active, and to restart sessions."]
+      ),
+      LIST("Presentation layer functions", [
+        "Coding and conversion of application layer data.",
+        "Data compression.",
+        "Data encryption for transmission, and decryption upon receipt by the destination."
+      ]),
+      LIST("Session layer functions", [
+        "Creates and maintains dialogs between source and destination applications.",
+        "Handles the exchange of information to initiate dialogs.",
+        "Keeps dialogs active and restarts sessions."
+      ]),
+      NOTE("The “Application Layer” slide has no text beyond its title."),
+      TAKE("Presentation: coding/conversion, compression, encryption/decryption.", "Session: creates, maintains and restarts dialogs between applications.")
+    ),
+    T("app-protocols", "TCP/IP Application Layer Protocols", "Slides: TCP/IP Application Layer Protocols (two slides); Application Layer Protocols Revisited",
+      P("The lecture lists ten application layer protocols with their purpose. Learn each purpose; exam questions often ask what a protocol is used for."),
+      TABLE("Application layer protocols as listed on the slides", ["Protocol", "Used for"], [
+        ["Domain Name Service Protocol (DNS)", "Resolve Internet names to IP addresses"],
+        ["Telnet", "A terminal emulation protocol used to provide remote access to servers and networking devices"],
+        ["Bootstrap Protocol (BOOTP)", "A precursor to the DHCP protocol; a network protocol used to obtain IP address information during bootup"],
+        ["Dynamic Host Configuration Protocol (DHCP)", "Assign an IP address, subnet mask, default gateway and DNS server to a host"],
+        ["Hypertext Transfer Protocol (HTTP)", "Transfer files that make up the Web pages of the World Wide Web"],
+        ["File Transfer Protocol (FTP)", "Interactive file transfer between systems (connection-oriented)"],
+        ["Trivial File Transfer Protocol (TFTP)", "Connectionless active file transfer"],
+        ["Simple Mail Transfer Protocol (SMTP)", "Transfer of mail messages and attachments"],
+        ["Post Office Protocol (POP)", "Used by email clients to retrieve email from a remote server"],
+        ["Internet Message Access Protocol (IMAP)", "Another protocol for email retrieval"]
+      ]),
+      LIST("Three protocols for everyday work or play", [
+        "**HTTP** to browse the web.",
+        "**SMTP** to enable users to send email.",
+        "**POP** to enable users to receive email."
+      ]),
+      TAKE("FTP is connection-oriented; TFTP is connectionless.", "SMTP sends mail; POP and IMAP retrieve mail.", "DNS resolves names; DHCP assigns IP address, subnet mask, default gateway and DNS server.")
+    ),
+    T("http", "HTTP and HTTPS", "Slides: Hypertext Transfer Protocol and Hypertext Markup Language; HTTP and HTTPS",
+      P("When you open a web page, the browser works through a fixed sequence using a URL. The lecture uses http://www.cisco.com/index.html as its example."),
+      DEF(["HTTP / HTTPS", "Developed to publish and retrieve HTML pages. Used for data transfer. It specifies a request/response protocol."]),
+      LIST("The three parts of the example URL", [
+        "`http`: the protocol or scheme",
+        "`www.cisco.com`: the server name",
+        "`index.html`: the specific file name requested"
+      ]),
+      DIAG("http", "The five steps of requesting a web page. Steps 1 and 5 happen inside the browser."),
+      STEPS("Process (example URL http://www.cisco.com/index.html)", [
+        "The browser interprets the three parts of the URL: http, www.cisco.com, index.html.",
+        "The browser checks with a name server to convert www.cisco.com into a numeric address.",
+        "Using the HTTP protocol requirements, it sends a **GET** request to the server and asks for the file index.html.",
+        "The server sends the HTML code for this web page.",
+        "The browser deciphers the HTML code and formats the page."
+      ]),
+      LIST("HTTP message types", [
+        "Three common message types: **GET**, **POST**, and **PUT**.",
+        "**GET** is a client request for data.",
+        "**POST** and **PUT** are used to send messages that upload data to the web server."
+      ]),
+      TAKE("HTTP is a request/response protocol for publishing and retrieving HTML pages.", "GET requests data; POST and PUT upload data.", "Browser flow: read URL, resolve name, GET, receive HTML, format page.")
+    ),
+    T("email", "Email Protocols: SMTP, POP and IMAP", "Slides: SMTP, POP, and IMAP",
+      P("One protocol sends mail and two retrieve it. The key difference is what happens to the messages on the server after retrieval."),
+      DEF(
+        ["Simple Mail Transfer Protocol (SMTP)", "Transfers mail reliably and efficiently."],
+        ["Post Office Protocol (POP)", "Enables a workstation to retrieve mail from a mail server."],
+        ["Internet Message Access Protocol (IMAP)", "Another protocol that retrieves email messages."]
+      ),
+      TABLE("POP compared with IMAP", ["", "POP", "IMAP"], [
+        ["What the client receives", "Mail is downloaded from the server to the client", "Copies of the messages are downloaded to the client application"],
+        ["What happens on the server", "Then deleted on the server", "Original messages are kept on the server until manually deleted"]
+      ]),
+      TAKE("SMTP transfers mail; POP and IMAP retrieve mail.", "POP downloads then deletes from the server. IMAP downloads copies and keeps the originals until manually deleted.")
+    ),
+    T("dns", "Domain Name Service (DNS) and nslookup", "Slides: Domain Name Service; DNS Hierarchy; nslookup",
+      P("DNS turns Internet names into IP addresses. The slide text covers the top-level domain examples and the nslookup utility. The slides that explain DNS operation are images."),
+      DEF(
+        ["Domain Name Service Protocol (DNS)", "Used to resolve Internet names to IP addresses."],
+        ["nslookup", "An operating system utility that allows the user to manually query the name servers to resolve a given host name."]
+      ),
+      TABLE("Top-level domain examples (DNS hierarchy slide)", ["Top-level domain", "Meaning"], [
+        [".au", "Australia"],
+        [".co", "Colombia"],
+        [".com", "Business or industry"],
+        [".jp", "Japan"],
+        [".org", "Non-profit organization"]
+      ]),
+      LIST("What nslookup can be used for", [
+        "To troubleshoot name resolution issues.",
+        "To verify the current status of the name servers."
+      ]),
+      NOTE("The three slides titled “Domain Name Service” contain only images. The lecture text does not describe the DNS lookup steps."),
+      TAKE("DNS resolves names to IP addresses.", "nslookup manually queries name servers and helps troubleshoot name resolution.")
+    ),
+    T("dhcp", "Dynamic Host Configuration Protocol (DHCP)", "Slides: Dynamic Host Configuration Protocol; DHCP Operation",
+      P("DHCP gives a host an IP address automatically. The lecture also says which devices should use DHCP and which should use static addressing."),
+      DEF(["DHCP", "Allows a host to obtain an IP address dynamically."]),
+      STEPS("How the address is given (from the slide)", [
+        "A DHCP server is contacted and an address is requested.",
+        "The server chooses an address from a configured range of addresses called a **pool**.",
+        "It “leases” the address to the host for a set period."
+      ]),
+      TABLE("DHCP and static addressing: which devices", ["Addressing", "Used for"], [
+        ["DHCP", "General purpose hosts such as end user devices"],
+        ["Static addressing", "Network devices such as gateways, switches, servers and printers"]
+      ]),
+      LIST("Important points", [
+        "DHCP assigns an IP address, subnet mask, default gateway and DNS server to a host (application protocols slide).",
+        "BOOTP is named as a precursor to DHCP.",
+        "DHCP is listed among the applications that use UDP."
+      ]),
+      NOTE("The “DHCP Operation” slide has no text, so the message exchange is not described."),
+      TAKE("DHCP leases an address from a pool for a set period.", "End user devices use DHCP; gateways, switches, servers and printers use static addresses.")
+    ),
+    T("file-sharing", "File Sharing: FTP and SMB", "Slides: Providing File Sharing Services; File Transfer Protocol; Server Message Block",
+      P("Two protocols are described for sharing files. FTP moves data using two connections, while SMB lets a client use a server’s resources as if they were local."),
+      DEF(
+        ["File Transfer Protocol (FTP)", "Allows data transfers between a client and a server. The FTP client is an application that runs on a computer and is used to push and pull data from a server running an FTP daemon."],
+        ["Server Message Block (SMB)", "A client-server, request-response protocol. Servers can make their resources available to clients on the network."]
+      ),
+      LIST("FTP: important points", [
+        "FTP requires **two connections** between the client and the server.",
+        "One connection is for commands and replies; the other is for the actual file transfer."
+      ]),
+      LIST("SMB: important points", [
+        "Clients establish a **long term connection** to servers.",
+        "After the connection is established, the user can access the resources on the server as if the resource is local to the client host."
+      ]),
+      EX("A file may be copied from PC to PC with Windows Explorer using the SMB protocol."),
+      TAKE("FTP uses two connections: one for commands and replies, one for the file transfer.", "SMB gives long term connections and access to server resources as if local.")
+    )
+  ]
+});
+
+LECTURES.push({
+  id: 4,
+  title: "Transport and Network Layers, IP Addressing",
+  blurb: "TCP and UDP, ports, the TCP three-way handshake, the network layer and IP, IPv4 and IPv6 addressing, subnet masks, and unicast, broadcast and multicast.",
+  topics: [
+    T("transport-layer", "The Transport Layer", "Slides: Transportation of Data; Transport Layer; Role of the Transport Layer; Transport Layer Reliability",
+      P("The transport layer sets up a temporary communication session between two applications and delivers data between them. TCP/IP uses two protocols for this."),
+      DEF(["Transport layer", "Responsible for establishing a temporary communication session between two applications and delivering data between them."]),
+      LIST("Primary responsibilities of transport layer protocols", [
+        "Tracking the individual communication between applications on the source and destination hosts.",
+        "Segmenting data for manageability and reassembling segmented data into streams of application data at the destination.",
+        "Identifying the proper application for each communication stream."
+      ]),
+      LIST("Reliability trade-off", [
+        "Different applications have different transport reliability requirements.",
+        "TCP/IP provides two transport layer protocols: **TCP** and **UDP**.",
+        "There is a trade-off between the value of reliability and the burden it places on the network.",
+        "Application developers choose the transport protocol based on the requirements of their applications."
+      ]),
+      NOTE("The slides titled Role of the Transport Layer (Cont.) and Conversation Multiplexing (Cont.) are images only."),
+      TAKE("The transport layer tracks conversations, segments and reassembles data, and identifies the proper application.", "TCP is reliable with more overhead; UDP has less overhead and no reliability.")
+    ),
+    T("tcp-udp", "TCP and UDP Compared", "Slides: Introducing TCP and UDP; UDP Communication; TCP or UDP",
+      P("The lecture lists the features of each protocol. UDP is the mirror image of TCP: where TCP is connection-oriented, reliable and stateful, UDP is connectionless, unreliable and stateless."),
+      TABLE("TCP compared with UDP (from the slides)", ["Feature", "TCP", "UDP"], [
+        ["Defined in", "RFC 793", "RFC 768"],
+        ["Connection", "Connection-oriented: creates a session between the source and destination", "Connectionless"],
+        ["Delivery", "Reliable delivery: retransmits lost or corrupt data", "Unreliable delivery"],
+        ["Ordering", "Ordered data reconstruction: reconstructs numbering and sequencing of segments", "No ordered data reconstruction"],
+        ["Flow control", "Regulates the amount of data transmitted", "No flow control"],
+        ["State", "Stateful protocol: tracks the session", "Stateless protocol"],
+        ["Overhead", "Makes larger demands on the network (more overhead)", "Less overhead"]
+      ]),
+      LIST("UDP is used by", [
+        "Domain Name System (DNS)",
+        "Video streaming",
+        "VoIP / IP telephony",
+        "Simple Network Management Protocol (SNMP)",
+        "Dynamic Host Configuration Protocol (DHCP)",
+        "Trivial File Transfer Protocol (TFTP)",
+        "Online games"
+      ]),
+      LIST("Why UDP is chosen", [
+        "It is a simple protocol that provides the basic transport layer function.",
+        "Used by applications that can tolerate small loss of data.",
+        "Used by applications that cannot tolerate delay."
+      ]),
+      NOTE("The slides “Applications that use TCP” and “Applications That Use UDP” are images only, so the TCP application list is not given in the text."),
+      TAKE("TCP: RFC 793, connection-oriented, reliable, ordered, flow control, stateful.", "UDP: RFC 768, connectionless, unreliable, no ordering, no flow control, stateless, low overhead.")
+    ),
+    T("ports-segmentation", "Port Numbers and Segmentation", "Slides: Separating Multiple Communications; TCP and UDP Port Addressing; TCP and UDP Segmentation",
+      P("Many applications can communicate at the same time, so the transport layer needs a way to tell them apart."),
+      DEF(["Port numbers", "Used by TCP and UDP to differentiate between applications."]),
+      DIAG("segmentation", "The transport layer divides the data into pieces and adds a header to each piece for delivery over the network."),
+      NOTE("The two “TCP and UDP Port Addressing” slides contain no text, so no specific port numbers are listed in the lecture."),
+      TAKE("Port numbers separate multiple communications.", "Segmentation: data is divided into pieces and each gets a header.")
+    ),
+    T("tcp-communication", "TCP Connection, Reliability and Flow Control", "Slides: TCP Communication; Reliability and Flow Control",
+      P("TCP starts a session with a three-way handshake and then keeps delivery reliable and ordered."),
+      DEF(["Three-way handshake", "The process TCP uses to establish a connection. The slide lists what it accomplishes."]),
+      LIST("What the three-way handshake does", [
+        "Establishes that the destination device is present on the network.",
+        "Verifies that the destination device has an active service and is accepting requests on the destination port number that the initiating client intends to use for the session.",
+        "Informs the destination device that the source client intends to establish a communication session on that port number."
+      ]),
+      LIST("Reliability and flow control", [
+        "**Sequence numbers** are used to reassemble segments into their original order (ordered delivery).",
+        "The lecture also lists window size and acknowledgements, and flow control with congestion avoidance."
+      ]),
+      NOTE("The slides on TCP Server Processes, TCP Session Termination, Window Size and Acknowledgements, and Flow Control – Congestion Avoidance contain only images. The individual handshake messages are not given in the text."),
+      TAKE("Three-way handshake: destination present, service active on the port, client intends to start a session.", "Sequence numbers restore segment order.")
+    ),
+    T("network-layer", "The Network Layer and IP Characteristics", "Slides: Network Layer in Communication; IP Characteristics; Characteristics of the IP protocol",
+      P("The network layer is OSI Layer 3, also called the Internet layer. It provides services that let end devices exchange data across the network."),
+      DEF(["Network layer (Internet layer)", "OSI Layer 3. Provides services to allow end devices to exchange data across the network."]),
+      LIST("Four basic processes used for end-to-end transport", [
+        "Addressing end devices",
+        "Encapsulation",
+        "Routing",
+        "De-encapsulating"
+      ]),
+      LIST("Common network layer protocols", ["IP version 4 (IPv4)", "IP version 6 (IPv6)"]),
+      LIST("Characteristics of the IP protocol (slide titles)", [
+        "IP is **connectionless**.",
+        "IP uses **best effort delivery**.",
+        "IP is **media independent**."
+      ]),
+      NOTE("The three slides on these characteristics, IP Components, Encapsulating IP and IPv4 Packet Header contain images only. They are named, but not explained, in the text."),
+      TAKE("Four processes: addressing, encapsulation, routing, de-encapsulating.", "IP is connectionless, best effort and media independent.")
+    ),
+    T("ipv4-limits-ipv6", "Limitations of IPv4 and Introducing IPv6", "Slides: Limitations of IPv4; Introducing IPv6",
+      P("IPv6 was introduced to address the limits of IPv4."),
+      LIST("Limitations of IPv4", [
+        "IP address depletion",
+        "Internet routing table expansion",
+        "Lack of end-to-end connectivity",
+        "Limitations with the 32-bit address of IPv4"
+      ]),
+      LIST("What IPv6 introduces", [
+        "Increased address bits to **128**.",
+        "Increased address space.",
+        "Improved packet handling.",
+        "Eliminates the need for NAT (Network Address Translation).",
+        "Integrated security."
+      ]),
+      TABLE("Address space (as on the slide)", ["", "IPv4", "IPv6"], [
+        ["Address length", "32 bits", "128 bits"],
+        ["Number of addresses", "4 billion (4,000,000,000)", "340 undecillion"]
+      ]),
+      TAKE("IPv4 problems: depletion, routing table growth, lack of end-to-end connectivity, 32-bit limit.", "IPv6: 128 bits, bigger space, better packet handling, no need for NAT, integrated security.")
+    ),
+    T("subnet-mask", "IPv4 Subnet Mask", "Slides: IPv4 Subnet Mask; Bitwise AND Operation",
+      P("An IPv4 address has a network portion and a host portion. Devices use a separate pattern to tell where one ends and the other begins."),
+      DEF(["Subnet mask", "A separate 32-bit pattern that devices use to define the network and host portions of an address."]),
+      LIST("Important points", [
+        "The subnet mask does not actually contain the network or host portion of an IPv4 address.",
+        "It just says **where to look** for these portions in a given IPv4 address.",
+        "The prefix length is used to examine the mask (shown as /8, /12, /16, /24 in the lecture’s address blocks)."
+      ]),
+      TABLE("Bitwise AND operation (from the slide)", ["Input A", "Input B", "A AND B"], [
+        ["1", "1", "1"],
+        ["1", "0", "0"],
+        ["0", "1", "0"],
+        ["0", "0", "0"]
+      ]),
+      NOTE("The slides on Binary Number System, Valid Subnet Masks and Examining the Prefix Length are images only, so no worked subnetting examples are included."),
+      TAKE("A subnet mask is a 32-bit pattern that shows where the network and host portions are.", "AND gives 1 only when both inputs are 1.")
+    ),
+    T("ipv4-transmission", "Unicast, Broadcast and Multicast", "Slides: IPv4 Unicast, Broadcast, and Multicast",
+      P("In an IPv4 network, hosts can communicate in one of three different ways."),
+      TABLE("The three transmission types", ["Type", "Definition", "Notes from the slides"], [
+        ["Unicast", "The process of sending a packet from one host to an individual host", ""],
+        ["Broadcast", "The process of sending a packet from one host to all hosts in the network", "Routers do not forward a limited broadcast. Directed broadcast example: destination 172.16.4.255, hosts within the 172.16.4.0/24 network"],
+        ["Multicast", "The process of sending a packet from one host to a selected group of hosts, possibly in different networks", "Reduces traffic. Reserved for addressing multicast groups: 224.0.0.0 to 239.255.255.255"]
+      ]),
+      LIST("Multicast address ranges", [
+        "**Link local:** `224.0.0.0` to `224.0.0.255` (example: routing information exchanged by routing protocols).",
+        "**Globally scoped:** `224.0.1.0` to `238.255.255.255` (example: `224.0.1.1` has been reserved for Network Time Protocol)."
+      ]),
+      TAKE("Unicast = one to one. Broadcast = one to all. Multicast = one to a selected group.", "Routers do not forward a limited broadcast.")
+    ),
+    T("ipv4-address-types", "Types of IPv4 Addresses", "Slides: Types of IPv4 Address",
+      P("Some IPv4 addresses are for private use and some are reserved for special purposes."),
+      TABLE("Private address blocks (hosts that do not require access to the Internet can use private addresses)", ["Range", "Prefix"], [
+        ["10.0.0.0 to 10.255.255.255", "10.0.0.0/8"],
+        ["172.16.0.0 to 172.31.255.255", "172.16.0.0/12"],
+        ["192.168.0.0 to 192.168.255.255", "192.168.0.0/16"]
+      ]),
+      TABLE("Special use IPv4 addresses", ["Type", "Details"], [
+        ["Network and broadcast addresses", "Within each network the first and last addresses cannot be assigned to hosts"],
+        ["Loopback", "127.0.0.1, a special address that hosts use to direct traffic to themselves (127.0.0.0 to 127.255.255.255 are reserved)"],
+        ["Link-local", "169.254.0.0 to 169.254.255.255 (169.254.0.0/16); addresses can be automatically assigned to the local host"],
+        ["TEST-NET", "192.0.2.0 to 192.0.2.255 (192.0.2.0/24); set aside for teaching and learning, used in documentation and network examples"],
+        ["Experimental", "240.0.0.0 to 255.255.255.254 are listed as reserved"]
+      ]),
+      DEF(["Classless Inter-Domain Routing (CIDR)", "The formal name for classless addressing (pronounced “cider”). It created a new set of standards that allowed service providers to allocate IPv4 addresses on any address bit boundary (prefix length) instead of only by a class A, B, or C address."]),
+      NOTE("The “Classful Addressing” slide is an image only, so the class ranges are not listed in the text."),
+      TAKE("Private blocks: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.", "Loopback 127.0.0.1; link-local 169.254.0.0/16; TEST-NET 192.0.2.0/24.", "CIDR lets providers allocate on any prefix length, not only class A, B or C.")
+    ),
+    T("ipv6-addressing", "IPv6 Addressing", "Slides: IPv6 Addressing; IPv6 Address Representation; Rule 1; Rule 2; IPv6 Address Types",
+      P("An IPv6 address is long, so the lecture gives two rules for writing it in shorter form."),
+      DEF(
+        ["IPv6 address", "128 bits in length, written as a string of hexadecimal values. 4 bits represent a single hexadecimal digit, so 32 hexadecimal values make up an IPv6 address."],
+        ["Hextet", "A segment of 16 bits, or four hexadecimals."]
+      ),
+      DIAG("hextets", "An IPv6 address example from the lecture, split into its eight hextets. It can be written in lowercase or uppercase."),
+      STEPS("Rules for shortening an address", [
+        "**Rule 1, omit leading 0s:** any leading 0s in any 16-bit section (hextet) can be omitted. Examples: 01AB becomes 1AB, 09F0 becomes 9F0, 0A00 becomes A00, 00AB becomes AB.",
+        "**Rule 2, omit all 0 segments:** a double colon (::) can replace any single, contiguous string of one or more 16-bit segments (hextets) consisting of all 0s. This is known as the compressed format."
+      ]),
+      LIST("Important points", [
+        "The double colon (::) can only be used **once** within an address, otherwise the address is ambiguous.",
+        "Incorrect address given in the lecture: `2001:0DB8::ABCD::1234`.",
+        "There are three types of IPv6 addresses: **Unicast**, **Multicast** and **Anycast**.",
+        "**IPv6 does not have broadcast addresses.**"
+      ]),
+      TAKE("128 bits = 32 hex digits = 8 hextets of 16 bits.", "Rule 1 drops leading zeros; Rule 2 uses :: once for all-zero hextets.", "IPv6 types: unicast, multicast, anycast. No broadcast.")
+    )
+  ]
+});
+
+LECTURES.push({
+  id: 5,
+  title: "Data Link Layer, Ethernet, MAC and ARP",
+  blurb: "The data link layer and its two sublayers, how Ethernet frames are built and processed, collisions and CSMA, MAC versus IP addresses, and how ARP finds a MAC address.",
+  topics: [
+    T("data-link-sublayers", "Data Link Layer: LLC and MAC Sublayers", "Slides: Purpose of the Data Link Layer; Data Link Layer; Ethernet Operation (LLC and MAC Sublayers)",
+      P("The data link layer is divided into two sublayers. The upper one talks to the layers above and below, and the lower one is implemented in hardware."),
+      DEF(
+        ["LLC (Logical Link Control)", "Handles communication between upper and lower layers. It takes the network protocol data and adds control information to help deliver the packet to the destination."],
+        ["MAC (Media Access Control) sublayer", "The lower sublayer of the data link layer. It is implemented by hardware, typically in the computer NIC."]
+      ),
+      LIST("The two primary responsibilities of the MAC sublayer", ["**Data encapsulation**", "**Media access control**"]),
+      NOTE("The slides “The Data Link Layer” and “Formatting Data for Transmission” have no text beyond their titles."),
+      TAKE("LLC: talks to upper and lower layers and adds control information.", "MAC: hardware (usually the NIC); responsible for data encapsulation and media access control.")
+    ),
+    T("mac-encapsulation", "MAC Sublayer: Data Encapsulation", "Slide: Ethernet Operation, MAC Sublayer (cont.)",
+      P("Encapsulation at the MAC sublayer means assembling a frame before transmission and taking it apart on reception. The MAC layer adds a header and a trailer to the network layer PDU."),
+      DEF(["Data encapsulation (MAC)", "Frame assembly before transmission and frame disassembly upon reception of a frame. The MAC layer adds a header and trailer to the network layer PDU."]),
+      DIAG("frame", "The MAC layer wraps the network layer PDU with a header (source and destination MAC address) and a trailer (CRC)."),
+      TABLE("The three primary functions of data encapsulation", ["Function", "What it does"], [
+        ["Frame delimiting", "Identifies a group of bits that make up a frame; synchronization between the transmitting and receiving nodes"],
+        ["Addressing", "Each Ethernet header added in the frame contains the physical address (MAC address) that enables a frame to be delivered to a destination node"],
+        ["Error detection", "Each Ethernet frame contains a trailer with a cyclic redundancy check (CRC) of the frame contents"]
+      ]),
+      TAKE("The MAC layer adds a header and a trailer to the network layer PDU.", "Three functions: frame delimiting, addressing, error detection (CRC in the trailer).")
+    ),
+    T("duplex-csma", "Half- and Full-Duplex, CSMA and Collisions", "Slides: Half- and Full-Duplex; Ethernet Operation, Media Access Control",
+      P("Media access control decides when a device may transmit. The lecture explains Carrier Sense Multiple Access (CSMA) and the collision that can happen with half duplex communication."),
+      TABLE("Half-duplex compared with full-duplex", ["Mode", "Direction"], [
+        ["Half-duplex", "One direction communication"],
+        ["Full-duplex", "Two direction communication"]
+      ]),
+      DEF(["Carrier Sense Multiple Access (CSMA)", "A process used to first detect if the media is carrying a signal."]),
+      STEPS("CSMA process", [
+        "The device first detects whether the media is carrying a signal.",
+        "If no carrier signal is detected, the device transmits its data.",
+        "If two devices transmit at the same time with half duplex communication, a **data collision** occurs."
+      ]),
+      TAKE("Half-duplex = one direction; full-duplex = two directions.", "CSMA: sense the media first; transmit only if no carrier signal is detected.", "Two devices transmitting at the same time in half duplex cause a data collision.")
+    ),
+    T("frame-processing", "Frame Processing and MAC Addresses", "Slides: Ethernet Operation, Frame Processing; Ethernet MAC",
+      P("When a frame arrives, each NIC checks whether it is addressed to it. MAC addresses can be written in several formats."),
+      LIST("MAC address facts", [
+        "MAC addresses are assigned to workstations, servers, printers, switches, and routers.",
+        "A sending device attaches header information to the packet, containing the source and destination MAC address."
+      ]),
+      TABLE("Three ways of writing the same MAC address (from the slide)", ["Format", "Example"], [
+        ["Hyphens", "`00-05-9A-3C-78-00`"],
+        ["Colons", "`00:05:9A:3C:78:00`"],
+        ["Dots", "`0005.9A3C.7800`"]
+      ]),
+      STEPS("What each NIC does with a frame", [
+        "Each NIC views the information to see if the destination MAC address in the frame matches the device’s physical MAC address stored in RAM.",
+        "If there is **no match**, the device discards the frame.",
+        "If it **matches**, the NIC passes the frame up the OSI layers, where the de-encapsulation process takes place."
+      ]),
+      LIST("Multicast MAC address", [
+        "A multicast MAC address is a special value that **begins with 01-00-5E** in hexadecimal.",
+        "The range of IPv4 multicast addresses is `224.0.0.0` to `239.255.255.255`."
+      ]),
+      NOTE("The slides on Unicast MAC Address and Broadcast MAC Address are images only."),
+      TAKE("Frames are accepted only when the destination MAC matches the NIC; otherwise they are discarded.", "Multicast MAC addresses begin with 01-00-5E.")
+    ),
+    T("mac-vs-ip", "MAC Address versus IP Address", "Slide: MAC and IP",
+      P("A computer needs both a physical and a logical address to communicate. The lecture compares them with a person’s name and address."),
+      TABLE("MAC address compared with IP address", ["", "MAC address", "IP address"], [
+        ["Analogy", "Similar to the name of a person", "Similar to the address of a person"],
+        ["Key point", "This address does not change", "Based on where the host is actually located"],
+        ["Known as", "Physical address, because it is physically assigned to the host NIC", "Logical address, because it is assigned logically"],
+        ["Assigned by", "Physically assigned to the host NIC", "Assigned to each host by a network administrator"]
+      ]),
+      P("**Both** the physical MAC and the logical IP addresses are required for a computer to communicate, just like both the name and address of a person are required to send a letter."),
+      TAKE("MAC = physical address (like a name, does not change). IP = logical address (like a postal address, based on location, assigned by an administrator).", "Both are required to communicate.")
+    ),
+    T("arp", "ARP: Address Resolution", "Slides: Introduction to ARP; ARP Functions/Operation",
+      P("A sending node needs a way to find the MAC address of the destination on a given Ethernet link. ARP provides that."),
+      LIST("The two basic functions of ARP", [
+        "Resolving IPv4 addresses to MAC addresses.",
+        "Maintaining a table of mappings."
+      ]),
+      DEF(
+        ["ARP table", "Used to find the data link layer address that is mapped to the destination IPv4 address. As a node receives frames from the media, it records the source IP and MAC address as a mapping in the ARP table."],
+        ["ARP request", "A Layer 2 broadcast to all devices on the Ethernet LAN."]
+      ),
+      DIAG("arp", "The sender broadcasts an ARP request to all devices on the LAN. The node whose IP address matches the one in the broadcast replies."),
+      STEPS("ARP request process (from the slide)", [
+        "The sending node sends an ARP request as a Layer 2 broadcast to all devices on the Ethernet LAN.",
+        "The node that matches the IP address in the broadcast replies.",
+        "If no device responds to the ARP request, the packet is dropped because a frame cannot be created."
+      ]),
+      LIST("Important points", [
+        "Static map entries can be entered in an ARP table, but this is **rarely done**."
+      ]),
+      NOTE("The four “ARP Operation” slides are images only, so the exact messages shown there are not described."),
+      TAKE("ARP resolves IPv4 addresses to MAC addresses and keeps a mapping table.", "The request is a Layer 2 broadcast; the matching node replies.", "If nobody responds, the packet is dropped.")
+    ),
+    T("arp-remote", "ARP in Remote Communication and the ARP Table", "Slides: ARP Role in Remote Communication; Removing Entries from an ARP Table",
+      P("When the destination is on another network, the frame is not addressed to the destination host itself. It is addressed to the gateway."),
+      DIAG("arpremote", "Decision flow for choosing the destination MAC address."),
+      STEPS("Process", [
+        "If the destination IPv4 host is on the **local network**, the frame uses the MAC address of that device as the destination MAC address.",
+        "If the destination is **not on the local network**, the source uses the ARP process to determine a MAC address for the **router interface serving as the gateway**.",
+        "If the gateway entry is not in the table, an ARP request is used to retrieve the MAC address associated with the IP address of the router interface."
+      ]),
+      LIST("Removing entries from an ARP table", [
+        "The **ARP cache timer** removes ARP entries that have not been used for a specified period of time.",
+        "Commands may also be used to manually remove all or some of the entries in the ARP table."
+      ]),
+      TAKE("Local destination: use its MAC. Remote destination: use the gateway’s (router interface) MAC.", "Unused entries are removed by the ARP cache timer, or manually by commands.")
+    ),
+    T("physical-layer", "Physical Layer", "Slides: Purpose of the Physical Layer; Physical Layer Media",
+      P("The physical layer is the last topic named in the lecture."),
+      NOTE("The slides “The Physical Layer” and “Physical Layer Media” contain no text, so the lecture text does not explain the physical layer."),
+      TAKE("The physical layer is named at the end of the lecture but is not explained in the text.")
+    )
+  ]
+});
+
+/* Question bank. Every question is tagged with a lecture number and topic id from the lecture data. */
+const TF = ["True", "False"];
+const Q = (lec, topic, type, q, opts, a, why) => ({ lec, topic, type, q, opts, a, why });
+const QUESTIONS = [
+  /* ---------- Lecture 1 ---------- */
+  Q(1, "computer-networking", "Multiple choice", "Which of these are given in the lecture as examples of IoT devices on a network?", ["Laptops and desktops only", "Servers and tablets only", "Cameras, door locks, audio/visual systems, thermostats and sensors", "Printers and scanners only"], 2, "The definition of computer networking names cameras, door locks, audio/visual systems, thermostats and various sensors as IoT devices. Laptops, desktops, servers, smartphones and tablets are the computing devices."),
+  Q(1, "daily-life", "True / False", "Online banking is the example given under “Money Management” in the list of the roles of networks.", TF, 0, "The slide lists “Money Management (example: Online Banking)”."),
+  Q(1, "network-structure", "Definition", "Which description matches an intermediary device?", ["It forms the interface between the human network and the communications network", "It provides connectivity and ensures data flows across the network", "It is the channel over which a message travels", "It is the software part of a network"], 1, "Intermediary devices provide connectivity and ensure data flows across the network, for example a router or a switch. An end device forms the interface with the human network, and network media is the channel a message travels over."),
+  Q(1, "network-structure", "Scenario", "A student uses a mobile phone to print a file on a network printer. According to the lecture, what role do the phone and printer play?", ["Intermediary devices", "Network media", "End devices", "Protocol suites"], 2, "End devices form the interface with the human network and the communications network. The lecture gives computer, printer and mobile as examples."),
+  Q(1, "copper-media", "Technical", "What is the maximum cable length given for coaxial cable?", ["100 m", "500 m", "1,000 m", "10 m"], 1, "The coaxial cable slide gives speed 10-100 Mbps, cost cheap and maximum cable length 500 m. STP and UTP are 100 m."),
+  Q(1, "copper-media", "Comparison", "Which copper cable does the lecture call the fastest copper-based medium today?", ["Coaxial cable", "Shielded twisted pair (STP)", "Unshielded twisted pair (UTP)", "Fiber-optic cable"], 2, "UTP is described as the fastest copper-based medium, with 10-100-1000 Mbps depending on cable quality/category. Fiber is not a copper medium."),
+  Q(1, "copper-media", "True / False", "UTP is the most expensive of the three copper cable types in the lecture.", TF, 1, "UTP is listed as the least expensive. STP is moderately expensive and coaxial is cheap."),
+  Q(1, "fiber-optic", "Multiple choice", "How does a fiber-optic cable carry data?", ["Using radio frequencies", "Using light pulses conducted through special glass conductors", "Using infrared waves through the air", "Using pairs of twisted copper wire"], 1, "The slide states that fiber-optic cables use light pulses conducted through special glass conductors. Radio frequencies and infrared belong to wireless media."),
+  Q(1, "fiber-optic", "Multiple choice", "Which of these is listed as a disadvantage of fiber-optic cable?", ["Much lower bandwidth than metal cables", "It is more susceptible to interference", "It is more fragile than wire and difficult to splice", "It can only carry analog data"], 2, "The disadvantages given are that fiber is expensive to install, more fragile than wire and difficult to splice. Its advantages include greater bandwidth, less interference, and digital transmission."),
+  Q(1, "fiber-vs-copper", "Technical", "According to the fiber versus copper table, what is the distance range supported by fiber optic?", ["1 – 100 meters", "1 – 500 meters", "1 – 10,000 meters", "1 – 100,000 meters"], 3, "Fiber is “Relatively High (1 – 100,000 meters)”. Copper is “Relatively short (1 – 100 meters)”."),
+  Q(1, "fiber-vs-copper", "Comparison", "Which statement about immunity to EMI and RFI is correct according to the table?", ["Copper is high and fiber is low", "Both are low", "Copper is low and fiber is high (completely immune)", "Both are completely immune"], 2, "Copper media has low immunity to EMI and RFI; fiber optic has high immunity (completely immune)."),
+  Q(1, "wireless-media", "Multiple choice", "What must a PC or laptop install to receive signals from the access point?", ["A fiber connector", "A wireless adapter card (wireless NIC)", "A terminator", "A coaxial adapter"], 1, "The slide says that to receive the signals from the access point, a PC or laptop must install a wireless adapter card (wireless NIC)."),
+  Q(1, "wireless-media", "True / False", "Wireless media requires physical cabling between devices.", TF, 1, "Wireless communication does not require physical cabling. It uses radio frequencies (RF) or infrared (IR) waves."),
+
+  /* ---------- Lecture 2 ---------- */
+  Q(2, "network-size", "Multiple choice", "Which of the following is NOT one of the six network types listed in the lecture?", ["Personal Area Network (PAN)", "Storage-Area Network (SAN)", "Campus Area Network (CAN)", "Wireless Local Area Network (WLAN)"], 3, "The six types listed are PAN, LAN, CAN, MAN, WAN and SAN. WLAN is not in the lecture’s list."),
+  Q(2, "lan-wan", "Comparison", "Which network is typically managed by service providers (SP) or Internet Service Providers (ISP)?", ["LAN", "WAN", "PAN", "CAN"], 1, "WANs are typically managed by SPs or ISPs and are usually administered by multiple service providers. A LAN is usually administered by a single organization or individual."),
+  Q(2, "lan-wan", "True / False", "A WAN typically provides higher speed links than a LAN.", TF, 1, "LANs provide high speed bandwidth to internal devices, while WANs typically provide slower speed links between LANs."),
+  Q(2, "man-can", "Scenario", "A bank has several branches within one city and wants to connect them. Which network type does the lecture suggest might be useful?", ["PAN", "SAN", "MAN", "CAN"], 2, "The MAN slide gives the example of companies such as banks that have several branches within a city."),
+  Q(2, "man-can", "Multiple choice", "How are most Campus Area Networks (CANs) built?", ["From one single cable with terminators", "From several LANs connected via switches and routers", "From a single hub", "From storage devices only"], 1, "Most CANs are comprised of several LANs connected via switches and routers that combine to create a single network."),
+  Q(2, "san-pan", "Definition", "What does a Storage Area Network (SAN) connect?", ["Devices close to one person", "Multiple hosts and storage devices", "Several branches within a city", "Only printers and scanners"], 1, "A SAN is a high-speed data transmission technology used to connect multiple hosts and storage devices over fiber-optic or copper cables."),
+  Q(2, "bus", "Multiple choice", "What does a bus topology have at each end of its main run of cable?", ["A hub", "A router", "A terminator", "A token"], 2, "A bus topology consists of a main run of cable with a terminator at each end."),
+  Q(2, "bus", "Multiple choice", "Which is a disadvantage of the bus topology?", ["It is expensive", "The cable length is limited, which limits the number of stations", "It requires more cable than other topologies", "A hub failure disables all nodes"], 1, "The bus disadvantages are limited cable length (limiting the number of stations) and good performance only with a limited number of nodes. It is cheap and requires less cable."),
+  Q(2, "ring", "Technical", "In a Token Ring network, what does a device do when it needs to transmit?", ["It broadcasts to every node", "It reserves the token for the next trip around, then attaches its data packet to it", "It waits for the hub to forward its signal", "It uses the shortest route with the fewest hops"], 1, "A token is continuously passed around the network. A device that needs to transmit reserves it for the next trip and attaches its data packet."),
+  Q(2, "ring", "Scenario", "In a ring network, a cable breaks. According to the lecture, what can happen?", ["Only the broken cable’s neighbors are affected", "The network switches to the shortest route automatically", "The loop is broken and the entire network can be taken down", "Nothing, because every node has a dedicated link"], 2, "A failure in any cable or device breaks the loop and can take down the entire network. Automatic shortest-route behavior is described for the mesh."),
+  Q(2, "star", "Scenario", "In a star network the central hub fails. What is the result?", ["Only one node is affected", "The nodes attached to it are disabled", "Data automatically takes another path", "The network becomes a ring"], 1, "If the hub or concentrator fails, the nodes attached are disabled."),
+  Q(2, "tree", "Definition", "How is a tree topology (hierarchical topology) described?", ["A single cable with terminators at both ends", "Every node connected to every other node", "A collection of star networks arranged in a hierarchy", "A loop in which messages travel one way"], 2, "A tree topology can be viewed as a collection of star networks arranged in a hierarchy."),
+  Q(2, "mesh", "Technical", "How does data travel on a mesh network?", ["It takes the shortest route, meaning the least number of hops", "It passes through a single backbone", "It waits for a token", "It is always broadcast to all nodes"], 0, "Data on a mesh network is automatically configured to take the shortest route, which means the least number of hops."),
+  Q(2, "mesh", "Comparison", "Which topology is described as having point-to-point links that make fault identification easy and cabling cost that is high?", ["Bus", "Mesh", "Ring", "Star"], 1, "These are listed under the mesh topology. Each node is connected to every other node."),
+  Q(2, "hybrid", "Definition", "What is a hybrid topology?", ["A combination of any two or more network topologies", "A topology that uses only wireless media", "A topology with a single cable", "Another name for the tree topology"], 0, "A hybrid topology is a combination of any two or more network topologies."),
+  Q(2, "internet-classification", "Definition", "How does the lecture define the Internet?", ["A private network of one organization", "A global mesh of interconnected networks", "A network that covers a campus", "A network of devices close to one person"], 1, "The Internet is a global mesh of interconnected networks, a worldwide collection of internetworks."),
+  Q(2, "p2p", "True / False", "In a peer-to-peer network, the roles of client and server are fixed permanently for each device.", TF, 1, "In a P2P network the roles of client and server are set on a per request basis, and both devices are considered equal."),
+  Q(2, "client-server-isp", "Multiple choice", "Which of these is listed as a popular choice for connecting to the Internet through an ISP?", ["Token Ring", "Broadband digital subscriber line (DSL)", "Coaxial bus", "Storage area network"], 1, "Popular choices listed are broadband cable, broadband DSL, wireless WANs, and mobile services."),
+  Q(2, "topology-intro", "True / False", "The physical topology of a network refers to the configuration of cables, computers, and other peripherals.", TF, 0, "The lecture defines the physical topology this way. A topology as a whole describes both the physical and the logical arrangement of the network nodes."),
+  Q(2, "topology-compare", "Comparison", "Which topology is described as a collection of star networks arranged in a hierarchy, where a broken backbone line takes down the entire segment?", ["Bus topology", "Ring topology", "Mesh topology", "Tree topology"], 3, "A tree topology is a collection of star networks arranged in a hierarchy, and if the backbone line breaks the entire segment goes down."),
+  Q(2, "architecture", "Multiple choice", "Which of these is one of the four characteristics addressed by network architecture design?", ["Quality of service", "Frame delimiting", "Loopback", "Segmentation"], 0, "The four are fault tolerance, scalability, quality of service and security."),
+
+  /* ---------- Lecture 3 ---------- */
+  Q(3, "communication-elements", "Multiple choice", "Which are the three common elements of communication named in the lecture?", ["Message source, the channel, message destination", "Client, server, router", "Hardware, software, media", "Segment, packet, frame"], 0, "The three elements are the message source, the channel and the message destination."),
+  Q(3, "protocols", "Definition", "How does the lecture define a standard?", ["A set of predetermined rules", "A process or protocol endorsed by the networking industry and ratified by a standards organization", "A device that forwards data", "A utility to verify connectivity"], 1, "A standard is a process or protocol that has been endorsed by the networking industry and ratified by a standards organization. A protocol is a set of predetermined rules."),
+  Q(3, "protocols", "Multiple choice", "Why can many different types of devices communicate using the same sets of protocols?", ["Because all devices use the same cable", "Because protocols specify network functionality, not the underlying technology", "Because every device uses the same IP address", "Because protocols are different on every device"], 1, "Protocols specify network functionality, not the underlying technology that supports it."),
+  Q(3, "layered-models", "Multiple choice", "Which is a listed benefit of using a layered model?", ["Changes in one layer affect every other layer", "Changes in one layer do not affect other layers", "It removes the need for protocols", "It makes all devices identical"], 1, "Benefits listed: assists protocol design, fosters improvement, changes in one layer do not affect other layers, and provides a common language."),
+  Q(3, "layered-models", "Comparison", "A model that “provides a common reference for maintaining consistency within all types of network protocols and services” is called what?", ["A protocol model", "A reference model", "A packet model", "A media model"], 1, "A reference model provides a common reference. A protocol model closely matches the structure of a particular protocol suite."),
+  Q(3, "ping", "Scenario", "A user wants to verify Internet connectivity and check the NIC transmit/receive function and TCP/IP configuration. Which utility fits?", ["nslookup", "Ping", "Telnet", "FTP"], 1, "Ping verifies Internet connectivity and tests the NIC transmit/receive function, the TCP/IP configuration and network connectivity. nslookup queries name servers."),
+  Q(3, "app-pres-session", "Comparison", "Which layer handles data compression and data encryption/decryption?", ["Session layer", "Presentation layer", "Transport layer", "Network layer"], 1, "The presentation layer handles coding and conversion, data compression, and data encryption and decryption. The session layer creates and maintains dialogs."),
+  Q(3, "app-protocols", "Technical", "Which items does DHCP assign to a host?", ["An IP address, subnet mask, default gateway and DNS server", "Only a MAC address", "Only a domain name", "A port number and a token"], 0, "DHCP is used to assign an IP address, subnet mask, default gateway and DNS server to a host."),
+  Q(3, "app-protocols", "Comparison", "Which statement about FTP and TFTP is correct according to the lecture?", ["FTP is connectionless and TFTP is connection-oriented", "FTP is connection-oriented and TFTP is connectionless", "Both are used for email", "Both resolve names to IP addresses"], 1, "FTP is used for interactive file transfer (connection-oriented), and TFTP is used for connectionless active file transfer."),
+  Q(3, "http", "Technical", "In the example URL http://www.cisco.com/index.html, what does index.html represent?", ["The protocol or scheme", "The server name", "The specific file name requested", "The numeric address"], 2, "The browser interprets http as the protocol, www.cisco.com as the server name and index.html as the specific file name requested."),
+  Q(3, "http", "Technical", "After the browser checks with a name server to convert the server name to a numeric address, what is the next step?", ["The server sends the HTML code", "The browser sends a GET request to the server for the file", "The browser formats the page", "The browser interprets the URL"], 1, "The sequence is: interpret the URL, check with a name server, send a GET request, server sends HTML code, browser formats the page."),
+  Q(3, "http", "Multiple choice", "Which HTTP message types are used to upload data to the web server?", ["GET only", "POST and PUT", "GET and POST", "PUT and GET"], 1, "GET is a client request for data. POST and PUT are used to send messages that upload data to the web server."),
+  Q(3, "email", "Comparison", "What happens to mail on the server when it is retrieved using POP?", ["It is kept until manually deleted", "It is downloaded to the client and then deleted on the server", "It is copied and kept on the server", "It is sent to another server"], 1, "With POP, mail is downloaded from the server to the client and then deleted on the server. With IMAP, copies are downloaded and the originals stay until manually deleted."),
+  Q(3, "email", "Scenario", "A user wants copies of messages on the client while the originals stay on the server until manually deleted. Which protocol behaves this way?", ["SMTP", "POP", "IMAP", "HTTP"], 2, "IMAP downloads copies of the messages and keeps the original messages on the server until manually deleted."),
+  Q(3, "dns", "Technical", "Which top-level domain is given as meaning “non-profit organization”?", [".com", ".org", ".jp", ".au"], 1, "The DNS hierarchy slide lists .au Australia, .co Colombia, .com business or industry, .jp Japan and .org non-profit organization."),
+  Q(3, "dns", "True / False", "The nslookup utility lets a user manually query the name servers to resolve a given host name.", TF, 0, "nslookup is an operating system utility used to manually query name servers, troubleshoot name resolution issues and verify the status of name servers."),
+  Q(3, "dhcp", "Comparison", "Which devices does the lecture say should use static addressing rather than DHCP?", ["End user devices", "Gateways, switches, servers and printers", "Smartphones and tablets", "All devices"], 1, "DHCP is for general purpose hosts such as end user devices. Static addressing is used for network devices such as gateways, switches, servers and printers."),
+  Q(3, "dhcp", "Multiple choice", "In DHCP, the server chooses an address from a configured range of addresses called what?", ["A pool", "A token", "A segment", "A hextet"], 0, "The DHCP server chooses an address from a pool and “leases” it to the host for a set period."),
+  Q(3, "file-sharing", "Technical", "How many connections does FTP require between the client and the server to transfer data successfully?", ["One", "Two", "Three", "Four"], 1, "FTP requires two connections: one for commands and replies, the other for the actual file transfer."),
+  Q(3, "addressing-naming", "Multiple choice", "Which of these are given as examples of the labels carried in encapsulation headers?", ["Ethernet MAC addresses, IP addresses and TCP/UDP port numbers", "Only domain names", "Only subnet masks", "Only email addresses"], 0, "The Addressing and Naming Schemes slides give Ethernet MAC addresses, IP addresses and TCP/UDP port numbers as examples. The header information identifies the source and destination processes."),
+  Q(3, "file-sharing", "Multiple choice", "What does SMB allow a user to do after the connection to the server is established?", ["Access resources on the server as if they are local to the client host", "Send email only", "Resolve domain names", "Assign IP addresses"], 0, "With SMB, clients establish a long term connection and can access server resources as if they were local."),
+
+  /* ---------- Lecture 4 ---------- */
+  Q(4, "transport-layer", "Multiple choice", "Which two protocols does TCP/IP use at the transport layer?", ["IPv4 and IPv6", "TCP and UDP", "HTTP and FTP", "ARP and DNS"], 1, "TCP/IP uses the Transmission Control Protocol (TCP) and the User Datagram Protocol (UDP) to establish a temporary session and deliver data."),
+  Q(4, "tcp-udp", "Technical", "Which RFC defines TCP, and which defines UDP, according to the lecture?", ["TCP: RFC 768, UDP: RFC 793", "TCP: RFC 793, UDP: RFC 768", "Both: RFC 793", "Both: RFC 768"], 1, "The lecture lists TCP as defined in RFC 793 and UDP as RFC 768."),
+  Q(4, "tcp-udp", "Comparison", "Which of these is a stateless protocol with no flow control?", ["TCP", "UDP", "Both TCP and UDP", "Neither"], 1, "UDP is connectionless, unreliable, stateless and has no flow control. TCP is stateful and provides flow control."),
+  Q(4, "tcp-udp", "Scenario", "An application cannot tolerate delay and can accept a small loss of data. Which transport protocol does the lecture associate with such applications?", ["TCP", "UDP", "FTP", "DHCP"], 1, "UDP is used by applications that can tolerate small loss of data and by applications that cannot tolerate delay."),
+  Q(4, "tcp-udp", "Multiple choice", "Which of these is listed as using UDP?", ["VoIP", "POP", "Telnet", "SMB"], 0, "The UDP slides list DNS, SNMP, DHCP, TFTP, IP telephony or VoIP, video streaming and online games."),
+  Q(4, "tcp-udp", "True / False", "TCP provides ordered data reconstruction by reconstructing the numbering and sequencing of segments.", TF, 0, "Ordered data reconstruction is one of the TCP features listed. UDP does not provide it."),
+  Q(4, "ports-segmentation", "Definition", "What do TCP and UDP use to differentiate between applications?", ["MAC addresses", "Port numbers", "Subnet masks", "Tokens"], 1, "TCP and UDP use port numbers to differentiate between applications."),
+  Q(4, "tcp-communication", "Technical", "What does the TCP three-way handshake verify about the destination device?", ["That it has an active service accepting requests on the destination port number", "That it uses the same cable type", "That it has a multicast address", "That it is using IPv6"], 0, "The three-way handshake establishes that the destination is present, verifies it has an active service accepting requests on the port, and informs it that the client intends to start a session on that port."),
+  Q(4, "tcp-communication", "Multiple choice", "What are sequence numbers used for in TCP?", ["To reassemble segments into their original order", "To assign IP addresses", "To encrypt data", "To identify the MAC address"], 0, "Sequence numbers are used to reassemble segments into their original order."),
+  Q(4, "network-layer", "Technical", "Which of these is NOT one of the four basic processes used by the network layer?", ["Addressing end devices", "Encapsulation", "Routing", "Frame delimiting"], 3, "The four processes are addressing end devices, encapsulation, routing and de-encapsulating. Frame delimiting is a MAC sublayer function."),
+  Q(4, "network-layer", "Multiple choice", "The network layer (Internet layer) is which OSI layer?", ["Layer 1", "Layer 2", "Layer 3", "Layer 4"], 2, "The lecture states that the network layer is OSI Layer 3."),
+  Q(4, "ipv4-limits-ipv6", "Technical", "How many bits does an IPv6 address have, compared with IPv4?", ["IPv6 has 64 bits; IPv4 has 32 bits", "IPv6 has 128 bits; IPv4 has 32 bits", "IPv6 has 128 bits; IPv4 has 64 bits", "Both have 32 bits"], 1, "IPv6 increased the address bits to 128. IPv4 has a 32-bit address."),
+  Q(4, "ipv4-limits-ipv6", "True / False", "IPv6 eliminates the need for NAT (Network Address Translation).", TF, 0, "Eliminating the need for NAT is one of the IPv6 improvements listed."),
+  Q(4, "subnet-mask", "Definition", "What does an IPv4 subnet mask do?", ["It contains the host portion of the address", "It says where to look for the network and host portions of an address", "It assigns the MAC address", "It encrypts the address"], 1, "The subnet mask is a separate 32-bit pattern. It does not contain the network or host portion; it just says where to look for them."),
+  Q(4, "subnet-mask", "Technical", "Using the bitwise AND operation, what is 1 AND 0?", ["1", "0", "10", "It is not defined"], 1, "The slide lists: 1 AND 1 = 1, 1 AND 0 = 0, 0 AND 1 = 0, 0 AND 0 = 0."),
+  Q(4, "ipv4-transmission", "Scenario", "A packet is sent to the directed broadcast destination 172.16.4.255. Which hosts receive it?", ["Only one host", "Hosts within the 172.16.4.0/24 network", "All hosts on the Internet", "Only routers"], 1, "The slide gives this directed broadcast example: destination 172.16.4.255, hosts within the 172.16.4.0/24 network."),
+  Q(4, "ipv4-transmission", "True / False", "Routers forward a limited broadcast.", TF, 1, "The slide notes: routers do not forward a limited broadcast."),
+  Q(4, "ipv4-transmission", "Technical", "What range is reserved for addressing multicast groups?", ["10.0.0.0 to 10.255.255.255", "127.0.0.0 to 127.255.255.255", "224.0.0.0 to 239.255.255.255", "240.0.0.0 to 255.255.255.254"], 2, "Multicast groups are addressed with 224.0.0.0 to 239.255.255.255. The last range is listed as experimental."),
+  Q(4, "ipv4-address-types", "Technical", "Which address falls inside a private address block listed in the lecture?", ["172.32.0.1", "169.254.1.1", "192.168.10.5", "11.0.0.1"], 2, "192.168.0.0 to 192.168.255.255 is a private block. 172.16.0.0 to 172.31.255.255 is private, so 172.32.0.1 is outside it, and 169.254.0.0/16 is link-local."),
+  Q(4, "ipv4-address-types", "Multiple choice", "Which IPv4 address is the loopback address that hosts use to direct traffic to themselves?", ["127.0.0.1", "169.254.0.1", "192.0.2.1", "255.255.255.254"], 0, "The loopback address is 127.0.0.1; the range 127.0.0.0 to 127.255.255.255 is reserved."),
+  Q(4, "ipv4-address-types", "Definition", "What did Classless Inter-Domain Routing (CIDR) allow?", ["Allocating IPv4 addresses on any address bit boundary (prefix length) instead of only by class A, B or C", "Removing the need for subnet masks", "Assigning MAC addresses", "Broadcasting between networks"], 0, "CIDR created standards that allowed service providers to allocate IPv4 addresses on any prefix length rather than only by class A, B or C."),
+  Q(4, "ipv6-addressing", "Technical", "Using Rule 1 (omit leading 0s), how can the hextet 09F0 be written?", ["9F0", "F0", "09F", "9F"], 0, "The lecture gives 09F0 can be represented as 9F0. Only leading zeros are omitted."),
+  Q(4, "ipv6-addressing", "Multiple choice", "Why is the address 2001:0DB8::ABCD::1234 incorrect?", ["Because the double colon can only be used once in an address", "Because it uses uppercase letters", "Because it has too few hextets", "Because leading zeros cannot be omitted"], 0, "A double colon (::) can only be used once within an address; otherwise the address is ambiguous. IPv6 can be written in lowercase or uppercase."),
+  Q(4, "ipv6-addressing", "Multiple choice", "Which of these is NOT an IPv6 address type according to the lecture?", ["Unicast", "Multicast", "Anycast", "Broadcast"], 3, "IPv6 has unicast, multicast and anycast addresses. IPv6 does not have broadcast addresses."),
+
+  /* ---------- Lecture 5 ---------- */
+  Q(5, "data-link-sublayers", "Multiple choice", "Which sublayer is the lower sublayer of the data link layer, implemented by hardware (typically in the NIC)?", ["LLC", "MAC", "Session", "Presentation"], 1, "The MAC sublayer is the lower sublayer and is implemented by hardware, typically in the computer NIC. LLC handles communication between upper and lower layers."),
+  Q(5, "mac-encapsulation", "Technical", "What does the MAC layer add to the network layer PDU?", ["Only a header", "Only a trailer", "A header and a trailer", "A token"], 2, "The MAC layer adds a header and trailer to the network layer PDU."),
+  Q(5, "mac-encapsulation", "Multiple choice", "Which of these is NOT one of the three primary functions of data encapsulation?", ["Frame delimiting", "Addressing", "Error detection", "Routing"], 3, "The three functions are frame delimiting, addressing and error detection (CRC in the trailer). Routing is a network layer process."),
+  Q(5, "mac-encapsulation", "Technical", "Where is the cyclic redundancy check (CRC) of the frame contents placed?", ["In the Ethernet trailer", "In the IP address", "In the port number", "In the ARP table"], 0, "For error detection, each Ethernet frame contains a trailer with a CRC of the frame contents."),
+  Q(5, "duplex-csma", "Comparison", "Which statement is correct?", ["Half-duplex is two direction communication; full-duplex is one direction", "Half-duplex is one direction communication; full-duplex is two direction", "Both are one direction", "Both are two direction"], 1, "Half-duplex is one direction communication and full-duplex is two direction communication."),
+  Q(5, "duplex-csma", "Scenario", "Two devices transmit at the same time using half duplex communication. What results?", ["A data collision", "A DHCP lease", "An ARP table entry", "A full-duplex session"], 0, "If two devices transmit at the same time with half duplex communication, a data collision occurs."),
+  Q(5, "duplex-csma", "Technical", "In the CSMA process, when does a device transmit its data?", ["Always immediately", "When no carrier signal is detected on the media", "When a carrier signal is detected", "Only after an ARP reply"], 1, "CSMA first detects whether the media is carrying a signal. If no carrier signal is detected, the device transmits its data."),
+  Q(5, "frame-processing", "Scenario", "A NIC receives a frame whose destination MAC address does not match its own physical MAC address. What does the device do?", ["Passes the frame up the OSI layers", "Discards the frame", "Broadcasts the frame", "Updates its IP address"], 1, "If there is no match, the device discards the frame. If it matches, the NIC passes it up the OSI layers for de-encapsulation."),
+  Q(5, "frame-processing", "Technical", "A multicast MAC address is a special value that begins with which value in hexadecimal?", ["FF-FF-FF", "01-00-5E", "00-05-9A", "224.0.0"], 1, "The multicast MAC address begins with 01-00-5E. 00-05-9A appears in the example MAC addresses."),
+  Q(5, "mac-vs-ip", "Comparison", "Which address is known as a logical address and is assigned to each host by a network administrator?", ["MAC address", "IP address", "Port number", "Hextet"], 1, "The IP address is a logical address, similar to the address of a person. The MAC address is the physical address."),
+  Q(5, "mac-vs-ip", "True / False", "Both the physical MAC address and the logical IP address are required for a computer to communicate.", TF, 0, "The lecture compares this to needing both the name and the address of a person to send a letter."),
+  Q(5, "arp", "Definition", "What are the two basic functions of ARP?", ["Resolving IPv4 addresses to MAC addresses and maintaining a table of mappings", "Assigning IP addresses and leasing them", "Encrypting data and compressing data", "Detecting errors and delimiting frames"], 0, "ARP resolves IPv4 addresses to MAC addresses and maintains a table of mappings."),
+  Q(5, "arp", "Multiple choice", "What kind of message is an ARP request?", ["A Layer 2 broadcast to all devices on the Ethernet LAN", "A unicast to the router only", "A multicast to the Internet", "An email message"], 0, "An ARP request is a Layer 2 broadcast to all devices on the Ethernet LAN. The node that matches the IP address replies."),
+  Q(5, "arp", "Scenario", "No device responds to an ARP request. What happens to the packet?", ["It is sent as a broadcast", "It is dropped because a frame cannot be created", "It is stored in the ARP table", "It is forwarded to the gateway"], 1, "If no device responds, the packet is dropped because a frame cannot be created."),
+  Q(5, "arp", "True / False", "Static map entries are commonly entered in an ARP table.", TF, 1, "Static map entries can be entered, but this is rarely done."),
+  Q(5, "arp-remote", "Scenario", "The destination IPv4 host is not on the local network. Whose MAC address does the source find using ARP?", ["The destination host", "The router interface serving as the gateway", "The DNS server", "The DHCP server"], 1, "If the destination is not on the local network, the source uses ARP to determine a MAC address for the router interface serving as the gateway."),
+  Q(5, "arp-remote", "Multiple choice", "What removes ARP entries that have not been used for a specified period of time?", ["The ARP cache timer", "The DHCP lease", "The token", "The CRC"], 0, "The ARP cache timer removes unused entries. Commands can also manually remove all or some of the entries.")
+];
+
+/* SVG diagrams. Each one only draws what the lecture text states. Colors come from CSS classes (see style.css). */
+const dgWrap = (id, h, label, inner) =>
+  `<svg class="dg" viewBox="0 0 360 ${h}" role="img" aria-label="${label}"><defs><marker id="ah-${id}" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" class="ahp"/></marker></defs>${inner}</svg>`;
+const dgRect = (x, y, w, h, c) => `<rect class="${c}" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`;
+const dgText = (x, y, s, c = "") => `<text class="${c}" x="${x}" y="${y}">${s}</text>`;
+const dgBox = (x, y, w, h, lines, c = "n", tc = "") =>
+  dgRect(x, y, w, h, c) + lines.map((s, i) => dgText(x + w / 2, y + h / 2 + (i - (lines.length - 1) / 2) * 13 + 4, s, tc)).join("");
+const dgLine = (x1, y1, x2, y2, c = "l", m = "") =>
+  `<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${m ? ` marker-end="url(#ah-${m})"` : ""}/>`;
+const dgCircle = (cx, cy, r, label, c = "n") => `<circle class="${c}" cx="${cx}" cy="${cy}" r="${r}"/>` + dgText(cx, cy + 4, label, "sm");
+const polar = (cx, cy, r, k, n) => {
+  const a = (-90 + (360 / n) * k) * Math.PI / 180;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+};
+
+const DIAGRAMS = {
+  bus() {
+    let s = dgLine(24, 100, 336, 100, "l bold");
+    s += dgRect(16, 88, 8, 24, "term") + dgRect(336, 88, 8, 24, "term");
+    [14, 98, 182, 266].forEach((x, i) => {
+      s += dgLine(x + 38, 54, x + 38, 100, "l");
+      s += dgBox(x, 20, 76, 34, [["File server", "Workstation", "Workstation", "Peripheral"][i]], "n", "sm");
+    });
+    s += dgText(20, 132, "Terminator", "sm start") + dgText(340, 132, "Terminator", "sm end");
+    s += dgText(180, 122, "Single cable (main run)", "sm mute");
+    return dgWrap("bus", 146, "Bus topology: four nodes attached to one main cable with a terminator at each end", s);
+  },
+  ring() {
+    const cx = 180, cy = 108, r = 76, n = 5;
+    let s = "";
+    for (let k = 0; k < n; k++) {
+      const [x1, y1] = polar(cx, cy, r, k, n), [x2, y2] = polar(cx, cy, r, k + 1, n);
+      const d = Math.hypot(x2 - x1, y2 - y1), ux = (x2 - x1) / d, uy = (y2 - y1) / d;
+      s += dgLine(x1 + ux * 22, y1 + uy * 22, x2 - ux * 26, y2 - uy * 26, "l acc", "ring");
+    }
+    for (let k = 0; k < n; k++) { const [x, y] = polar(cx, cy, r, k, n); s += dgCircle(x, y, 21, "Node"); }
+    s += dgText(cx, cy - 2, "One direction", "sm mute") + dgText(cx, cy + 12, "around the ring", "sm mute");
+    return dgWrap("ring", 210, "Ring topology: five nodes in a loop, each with two neighbors, with arrows in a single direction", s);
+  },
+  star() {
+    const hub = [180, 100], pts = [[52, 30], [180, 22], [308, 30], [52, 170], [180, 178], [308, 170]];
+    let s = pts.map(p => dgLine(hub[0], hub[1], p[0], p[1], "l")).join("");
+    s += pts.map(p => dgBox(p[0] - 32, p[1] - 14, 64, 28, ["Node"], "n", "sm")).join("");
+    s += dgBox(122, 78, 116, 44, ["Hub / switch /", "concentrator"], "hub", "sm");
+    return dgWrap("star", 200, "Star topology: six nodes each connected to a central hub, switch or concentrator", s);
+  },
+  tree() {
+    const top = [180, 30], hubs = [[95, 104], [265, 104]], leaves = [[55, 176], [135, 176], [225, 176], [305, 176]];
+    let s = hubs.map(h => dgLine(top[0], top[1], h[0], h[1], "l")).join("");
+    hubs.forEach((h, i) => { s += dgLine(h[0], h[1], leaves[i * 2][0], leaves[i * 2][1], "l") + dgLine(h[0], h[1], leaves[i * 2 + 1][0], leaves[i * 2 + 1][1], "l"); });
+    s += dgBox(top[0] - 58, top[1] - 16, 116, 32, ["Top of hierarchy"], "hub", "sm");
+    s += hubs.map(h => dgBox(h[0] - 32, h[1] - 14, 64, 28, ["Hub"], "hub", "sm")).join("");
+    s += leaves.map(l => dgBox(l[0] - 32, l[1] - 14, 64, 28, ["Node"], "n", "sm")).join("");
+    return dgWrap("tree", 206, "Tree topology: star networks arranged in a hierarchy, with a top node, two hubs and four nodes", s);
+  },
+  mesh() {
+    const cx = 180, cy = 108, r = 78, n = 5;
+    const p = Array.from({ length: n }, (_, k) => polar(cx, cy, r, k, n));
+    let s = "";
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) s += dgLine(p[i][0], p[i][1], p[j][0], p[j][1], "l");
+    s += p.map(q => dgCircle(q[0], q[1], 21, "Node")).join("");
+    return dgWrap("mesh", 210, "Mesh topology: five nodes, each connected directly to every other node", s);
+  },
+  http() {
+    const lanes = [60, 180, 300], names = ["Browser", "Name server", "Web server"];
+    let s = lanes.map(x => dgLine(x, 38, x, 292, "l dash")).join("");
+    s += lanes.map((x, i) => dgBox(x - 48, 6, 96, 28, [names[i]], "hub", "sm")).join("");
+    const rows = [
+      [66, "1  Read the URL: http, www.cisco.com, index.html", null],
+      [112, "2  Ask a name server for the numeric address", [60, 180]],
+      [158, "3  GET request for index.html", [60, 300]],
+      [204, "4  Server sends the HTML code", [300, 60]],
+      [262, "5  Browser formats the page", null]
+    ];
+    rows.forEach(([y, t, a]) => {
+      s += dgText(10, y, t, "sm start halo");
+      if (a) s += dgLine(a[0], y + 14, a[1] + (a[1] > a[0] ? -2 : 2), y + 14, "l acc", "http");
+    });
+    return dgWrap("http", 300, "Steps of an HTTP page request between a browser, a name server and a web server", s);
+  },
+  segmentation() {
+    let s = dgBox(20, 8, 320, 30, ["Application data"], "n", "sm");
+    s += dgLine(180, 38, 180, 62, "l acc", "seg");
+    [20, 126, 232].forEach(x => {
+      s += dgBox(x, 66, 30, 36, ["H"], "hub", "sm") + dgBox(x + 30, 66, 74, 36, ["Piece of data"], "n", "sm");
+    });
+    s += dgText(180, 124, "H = header added by the transport layer", "sm mute");
+    return dgWrap("seg", 134, "The transport layer divides data into pieces and adds a header to each piece", s);
+  },
+  hextets() {
+    const rows = [["2001", "0DB8", "0000", "1111", "0000", "0000", "0000", "0200"], ["FE80", "0000", "0000", "0000", "0123", "4567", "89AB", "CDEF"]];
+    let s = "";
+    rows.forEach((r, ri) => r.forEach((h, i) => { s += dgBox(6 + i * 44, 14 + ri * 52, 40, 32, [h], "n", "mono"); }));
+    s += dgText(180, 122, "8 hextets x 16 bits = 128 bits", "sm mute");
+    s += dgText(180, 138, "1 hextet = 4 hexadecimal digits", "sm mute");
+    return dgWrap("hex", 148, "Two IPv6 address examples from the lecture split into eight hextets each", s);
+  },
+  frame() {
+    let s = dgText(180, 18, "Ethernet frame", "sm mute");
+    s += dgLine(10, 26, 350, 26, "l");
+    s += dgBox(10, 38, 100, 60, ["Header", "source and", "destination MAC"], "hub", "sm");
+    s += dgBox(110, 38, 140, 60, ["Network layer PDU"], "n", "sm");
+    s += dgBox(250, 38, 100, 60, ["Trailer", "CRC of the", "frame contents"], "hub", "sm");
+    return dgWrap("frame", 112, "An Ethernet frame: a header with source and destination MAC address, the network layer PDU, and a trailer with a CRC", s);
+  },
+  arp() {
+    let s = "";
+    const dev = [[250, 20, 32, ["Device"]], [250, 90, 36, ["Device", "(IP matches)"]], [250, 174, 32, ["Device"]]];
+    s += dgLine(90, 100, 248, 36, "l dash acc", "arp");
+    s += dgLine(90, 100, 248, 100, "l dash acc", "arp");
+    s += dgLine(90, 100, 248, 190, "l dash acc", "arp");
+    s += dgLine(248, 118, 92, 118, "l acc", "arp");
+    s += dgBox(10, 84, 80, 44, ["Sender"], "hub", "sm");
+    dev.forEach((d, i) => { s += dgBox(d[0], d[1], 100, d[2], d[3], i === 1 ? "hub" : "n", "sm"); });
+    s += dgText(150, 56, "ARP request (broadcast)", "sm halo");
+    s += dgText(170, 134, "reply", "sm halo");
+    return dgWrap("arp", 214, "ARP: the sender broadcasts a request to every device, and only the device whose IP address matches replies", s);
+  },
+  arpremote() {
+    let s = dgBox(70, 8, 220, 44, ["Is the destination IPv4 host", "on the local network?"], "hub", "sm");
+    s += dgLine(120, 52, 95, 98, "l acc", "ar") + dgText(88, 78, "Yes", "sm halo");
+    s += dgLine(240, 52, 265, 98, "l acc", "ar") + dgText(278, 78, "No", "sm halo");
+    s += dgBox(10, 100, 170, 56, ["Use the MAC address of", "that device as the", "destination MAC"], "n", "sm");
+    s += dgBox(190, 100, 160, 56, ["Source uses ARP to find", "the MAC of the router", "interface (gateway)"], "n", "sm");
+    s += dgLine(270, 156, 270, 196, "l acc", "ar");
+    s += dgBox(190, 198, 160, 70, ["If the gateway entry is", "not in the table:", "ARP request retrieves the", "MAC for the router IP"], "hub", "sm");
+    return dgWrap("ar", 280, "How the destination MAC address is chosen for local and remote destinations", s);
+  }
+};
+
+/* App: reads LECTURES, QUESTIONS and DIAGRAMS and renders the reading view, search and quiz. No content lives in this file. */
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const fmt = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/`(.+?)`/g, "<code>$1</code>");
+  const plain = (s) => String(s).replace(/\*\*/g, "").replace(/`/g, "");
+  const letters = "ABCDEFGH";
+
+  const view = $("#view"), rail = $("#rail"), scrim = $("#scrim");
+  const lecById = (id) => LECTURES.find((l) => l.id === id);
+  let pendingTopic = null;
+  let quiz = { lec: "all", pool: [], i: 0, ans: [], finished: false, focus: false };
+
+  /* ---------- Block renderers ---------- */
+  const R = {
+    p: (b) => `<p>${fmt(b.x)}</p>`,
+    def: (b) => `<div class="defs"><p class="label">Definitions</p><dl>${b.items.map(([t, d]) => `<div class="d"><dt>${esc(t)}</dt><dd>${fmt(d)}</dd></div>`).join("")}</dl></div>`,
+    list: (b) => `<div class="list"><p class="label">${esc(b.title)}</p><ul>${b.items.map((i) => `<li>${fmt(i)}</li>`).join("")}</ul></div>`,
+    steps: (b) => `<div class="steps"><p class="label">${esc(b.title)}</p><ol>${b.items.map((i) => `<li>${fmt(i)}</li>`).join("")}</ol></div>`,
+    table: (b) => `<div class="tbl${b.head.length <= 2 ? " narrow" : ""}" tabindex="0" role="region" aria-label="${esc(b.caption)}"><table><caption>${esc(b.caption)}</caption><thead><tr>${b.head.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${b.rows.map((r) => `<tr>${r.map((c, i) => (i === 0 ? `<th scope="row">${fmt(c)}</th>` : `<td>${fmt(c)}</td>`)).join("")}</tr>`).join("")}</tbody></table></div>`,
+    pros: (b) => `<div class="pc"><div class="pro"><p class="label">Advantages</p><ul>${b.pros.map((i) => `<li>${fmt(i)}</li>`).join("")}</ul></div><div class="con"><p class="label">Disadvantages</p><ul>${b.cons.map((i) => `<li>${fmt(i)}</li>`).join("")}</ul></div></div>`,
+    note: (b) => `<div class="note"><p class="label">Not detailed in the slides</p><p>${fmt(b.x)}</p></div>`,
+    example: (b) => `<div class="example"><p class="label">Example from the lecture</p><p>${fmt(b.x)}</p></div>`,
+    diagram: (b) => `<figure class="fig">${DIAGRAMS[b.id]()}<figcaption>${fmt(b.caption)}</figcaption></figure>`,
+    take: (b) => `<div class="take"><p class="label">Key takeaways</p><div class="list"><ul>${b.items.map((i) => `<li>${fmt(i)}</li>`).join("")}</ul></div></div>`
+  };
+
+  function topicHtml(lec, t, n) {
+    return `<details class="topic" id="t-${lec.id}-${t.id}" open><summary><span><h3 class="topic-title">${esc(t.title)}</h3><span class="topic-src">${esc(t.source)}</span></span></summary><div class="topic-body">${t.blocks.map((b) => R[b.t](b)).join("")}</div></details>`;
+  }
+
+  /* ---------- Rail (lecture list, contents, quiz link) ---------- */
+  function renderRail(current) {
+    let h = `<div class="rail-head"><strong>Network Principles</strong><button class="btn ghost" id="closeRail" aria-label="Close menu">Close</button></div><h2>Lectures</h2><nav aria-label="Lectures">`;
+    LECTURES.forEach((l) => {
+      h += `<button class="lec-btn" data-lec="${l.id}"${current === l.id ? ' aria-current="true"' : ""}><span class="n">L${l.id}</span><span>${esc(l.title)}</span></button>`;
+      if (current === l.id) h += `<ul class="toc">${l.topics.map((t) => `<li><a href="#lecture-${l.id}" data-topic="${t.id}" data-lec="${l.id}">${esc(t.title)}</a></li>`).join("")}</ul>`;
+    });
+    h += `</nav><h2>Practice</h2><button class="btn${current === "quiz" ? " on" : ""}" data-go="quiz"${current === "quiz" ? ' aria-current="true"' : ""}>Test Yourself</button>`;
+    rail.innerHTML = h;
+  }
+  function openRail(o) { rail.classList.toggle("open", o); scrim.hidden = !o; $("#menuBtn").setAttribute("aria-expanded", String(o)); }
+
+  /* ---------- Lecture view ---------- */
+  function renderLecture(id) {
+    const lec = lecById(id) || LECTURES[0];
+    const idx = LECTURES.indexOf(lec), prev = LECTURES[idx - 1], next = LECTURES[idx + 1];
+    document.title = `Lecture ${lec.id} · Network Principles`;
+    renderRail(lec.id);
+    view.innerHTML = `<header class="lec-head"><p class="eyebrow">Lecture ${lec.id} of ${LECTURES.length}</p><h1>${esc(lec.title)}</h1><p class="blurb">${esc(lec.blurb)}</p><p class="source-note">Source: Network Principles_All Lectures.pdf. The file is one combined set of slides, so the five lectures here group its topics in the order they appear. Slide titles are given as references. Nothing outside the slides is added.</p><div class="lec-nav"><button class="btn" id="expandAll">Expand all</button><button class="btn" id="collapseAll">Collapse all</button><button class="btn primary" data-quiz="${lec.id}">Test this lecture</button></div></header>${lec.topics.map((t, n) => topicHtml(lec, t, n)).join("")}<footer class="lec-nav" style="margin-top:28px">${prev ? `<a class="btn" href="#lecture-${prev.id}">Previous: Lecture ${prev.id}</a>` : ""}${next ? `<a class="btn" href="#lecture-${next.id}">Next: Lecture ${next.id}</a>` : ""}<button class="btn primary" data-quiz="${lec.id}">Test Yourself</button><button class="btn" id="toStart">Back to start of lecture</button></footer>`;
+    $("#expandAll").onclick = () => view.querySelectorAll("details.topic").forEach((d) => (d.open = true));
+    $("#collapseAll").onclick = () => view.querySelectorAll("details.topic").forEach((d) => (d.open = false));
+    $("#toStart").onclick = () => window.scrollTo({ top: 0 });
+    if (pendingTopic) { const t = pendingTopic; pendingTopic = null; showTopic(lec.id, t); } else window.scrollTo({ top: 0 });
+    observeTopics(lec);
+  }
+  function showTopic(lecId, topicId) {
+    const el = document.getElementById(`t-${lecId}-${topicId}`);
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ block: "start" });
+  }
+  let observer;
+  function observeTopics(lec) {
+    if (observer) observer.disconnect();
+    if (!("IntersectionObserver" in window)) return;
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          rail.querySelectorAll(".toc a").forEach((a) => a.classList.toggle("cur", `t-${lec.id}-${a.dataset.topic}` === e.target.id));
+        }
+      });
+    }, { rootMargin: "-80px 0px -70% 0px" });
+    view.querySelectorAll("details.topic").forEach((d) => observer.observe(d));
+  }
+
+  /* ---------- Quiz ---------- */
+  const poolFor = (lec) => (lec === "all" ? QUESTIONS : QUESTIONS.filter((q) => q.lec === Number(lec)));
+  /* Option order is shuffled each run (True / False keeps its order) so the right answer is not always in the same place. */
+  function shuffled(q) {
+    if (q.type === "True / False") return Object.assign({}, q);
+    const order = q.opts.map((_, k) => k);
+    for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+    return Object.assign({}, q, { opts: order.map((k) => q.opts[k]), a: order.indexOf(q.a) });
+  }
+  function startQuiz(lec) {
+    quiz = { lec: String(lec), pool: poolFor(lec).map(shuffled), i: 0, ans: [], finished: false, focus: true };
+    quiz.ans = quiz.pool.map(() => ({ sel: null, done: false }));
+    renderQuiz();
+  }
+  const topicTitle = (q) => { const l = lecById(q.lec); const t = l && l.topics.find((x) => x.id === q.topic); return t ? t.title : q.topic; };
+
+  function filterHtml() {
+    const opts = [`<option value="all"${quiz.lec === "all" ? " selected" : ""}>All Lectures (${QUESTIONS.length} questions)</option>`]
+      .concat(LECTURES.map((l) => `<option value="${l.id}"${quiz.lec === String(l.id) ? " selected" : ""}>Lecture ${l.id}: ${esc(l.title)} (${poolFor(l.id).length})</option>`));
+    return `<div class="filter"><div><label for="lecFilter">Lecture</label><select id="lecFilter">${opts.join("")}</select></div><div class="count" aria-live="polite">${quiz.pool.length} question${quiz.pool.length === 1 ? "" : "s"} selected</div></div>`;
+  }
+
+  function renderQuiz() {
+    document.title = "Test Yourself · Network Principles";
+    renderRail("quiz");
+    let h = `<div class="quiz"><p class="eyebrow">Practice</p><h1>Test Yourself</h1><p class="blurb">Questions come only from the lecture slides. Choose a lecture or practise them all.</p>${filterHtml()}`;
+    if (!quiz.pool.length) h += `<div class="empty-msg">There are no questions for this selection yet.</div>`;
+    else if (quiz.finished) h += resultsHtml();
+    else h += questionHtml();
+    view.innerHTML = h + "</div>";
+    bindQuiz();
+    if (quiz.focus) { quiz.focus = false; const f = $("#qfocus"); if (f) f.focus({ preventScroll: true }); }
+  }
+
+  function questionHtml() {
+    const q = quiz.pool[quiz.i], a = quiz.ans[quiz.i], total = quiz.pool.length;
+    const pct = Math.round((quiz.ans.filter((x) => x.done).length / total) * 100);
+    let h = `<div class="q-meta"><span>Question <b>${quiz.i + 1}</b> of <b>${total}</b></span><span>${quiz.ans.filter((x) => x.done).length} answered</span></div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="Quiz progress"><i style="width:${pct}%"></i></div>`;
+    h += `<p class="q-tag" id="qfocus" tabindex="-1">Lecture ${q.lec} · ${esc(topicTitle(q))} · ${esc(q.type)}</p><h2 class="q-text" id="qtext">${fmt(q.q)}</h2><ul class="opts" role="radiogroup" aria-labelledby="qtext">`;
+    q.opts.forEach((o, k) => {
+      let cls = "opt", tag = "";
+      if (a.done) {
+        if (k === q.a) { cls += " right"; tag = a.sel === k ? "Correct" : "Correct answer"; }
+        else if (k === a.sel) { cls += " wrong"; tag = "Your answer"; }
+      }
+      h += `<li><button type="button" class="${cls}" role="radio" aria-checked="${a.sel === k}" data-k="${k}"${a.done ? " disabled" : ""}><span class="k">${letters[k]}</span><span>${fmt(o)}</span>${tag ? `<span class="tag">${tag}</span>` : ""}</button></li>`;
+    });
+    h += `</ul><div id="fb" role="status" aria-live="polite">`;
+    if (a.done) {
+      const ok = a.sel === q.a;
+      h += `<div class="feedback ${ok ? "ok" : "no"}"><h3>${ok ? "Correct" : "Incorrect"}</h3><p>${ok ? "" : `The correct answer is <strong>${letters[q.a]}. ${esc(q.opts[q.a])}</strong>. `}${fmt(q.why)}</p></div>`;
+    }
+    h += `</div><div class="q-actions"><button class="btn" id="prevQ"${quiz.i === 0 ? " disabled" : ""}>Previous</button><button class="btn primary" id="submitQ"${a.sel === null || a.done ? " disabled" : ""}>Submit Answer</button><button class="btn primary" id="nextQ"${a.done ? "" : " disabled"}>${quiz.i === total - 1 ? "See Results" : "Next Question"}</button></div>`;
+    return h;
+  }
+
+  function resultsHtml() {
+    const total = quiz.pool.length, right = quiz.pool.filter((q, i) => quiz.ans[i].sel === q.a).length, wrong = total - right, pct = Math.round((right / total) * 100);
+    let h = `<div class="score" id="qfocus" tabindex="-1"><p class="label">Final score</p><div class="big">${right}<small> / ${total}</small></div><p style="margin:8px 0 0;font-size:18px"><b>${pct}%</b> correct</p><div class="stats"><div><b>${right}</b><span>Correct</span></div><div><b>${wrong}</b><span>Incorrect</span></div><div><b>${total}</b><span>Total</span></div></div><div class="q-actions"><button class="btn primary" id="restartQ">Restart Quiz</button></div></div><h2 style="font-size:20px;margin:28px 0 0">Review answers</h2><ol class="review">`;
+    quiz.pool.forEach((q, i) => {
+      const a = quiz.ans[i], ok = a.sel === q.a;
+      h += `<li class="${ok ? "ok" : "no"}"><span class="rt">Q${i + 1} · Lecture ${q.lec} · ${esc(topicTitle(q))}</span><p class="rq">${fmt(q.q)}</p><p class="ra">Your answer: <b>${a.sel === null ? "No answer" : esc(q.opts[a.sel])}</b> ${ok ? "(correct)" : "(incorrect)"}</p>${ok ? "" : `<p class="ra">Correct answer: <b>${esc(q.opts[q.a])}</b></p>`}<p class="rw">${fmt(q.why)}</p></li>`;
+    });
+    return h + "</ol>";
+  }
+
+  function bindQuiz() {
+    const f = $("#lecFilter");
+    if (f) f.onchange = () => startQuiz(f.value);
+    const group = $(".opts");
+    const q = quiz.pool[quiz.i], a = quiz.ans[quiz.i];
+    if (group && q) {
+      const pick = (k) => { if (a.done) return; a.sel = k; renderQuizKeep(k); };
+      group.querySelectorAll(".opt").forEach((b) => (b.onclick = () => pick(Number(b.dataset.k))));
+      group.onkeydown = (e) => {
+        if (a.done || !["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
+        e.preventDefault();
+        const n = q.opts.length, cur = a.sel === null ? -1 : a.sel;
+        pick(e.key === "ArrowDown" || e.key === "ArrowRight" ? (cur + 1) % n : (cur - 1 + n) % n);
+      };
+      $("#submitQ").onclick = () => { a.done = true; renderQuiz(); $("#fb").scrollIntoView({ block: "nearest" }); };
+      $("#nextQ").onclick = () => { if (quiz.i === quiz.pool.length - 1) quiz.finished = true; else quiz.i++; quiz.focus = true; renderQuiz(); window.scrollTo({ top: 0 }); };
+      $("#prevQ").onclick = () => { if (quiz.i > 0) { quiz.i--; quiz.focus = true; renderQuiz(); window.scrollTo({ top: 0 }); } };
+    }
+    const r = $("#restartQ");
+    if (r) r.onclick = () => { startQuiz(quiz.lec); window.scrollTo({ top: 0 }); };
+  }
+  function renderQuizKeep(k) {
+    const sy = window.scrollY;
+    renderQuiz();
+    window.scrollTo({ top: sy });
+    const b = view.querySelector(`.opt[data-k="${k}"]`);
+    if (b) b.focus({ preventScroll: true });
+  }
+
+  /* ---------- Search ---------- */
+  const index = [];
+  LECTURES.forEach((l) => l.topics.forEach((t) => {
+    const parts = [t.title, t.source];
+    t.blocks.forEach((b) => {
+      if (b.x) parts.push(b.x);
+      if (b.title) parts.push(b.title);
+      if (b.caption) parts.push(b.caption);
+      (b.items || []).forEach((i) => parts.push(Array.isArray(i) ? i.join(" ") : i));
+      (b.rows || []).forEach((r) => parts.push(r.join(" ")));
+      (b.pros || []).concat(b.cons || []).forEach((i) => parts.push(i));
+    });
+    index.push({ lec: l, topic: t, text: plain(parts.join(" · ")) });
+  }));
+  function search(qs) {
+    const words = qs.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    return index.filter((e) => { const tx = (e.topic.title + " " + e.text).toLowerCase(); return words.every((w) => tx.includes(w)); }).slice(0, 20);
+  }
+  function snippet(text, qs) {
+    const w = qs.toLowerCase().split(/\s+/)[0], i = text.toLowerCase().indexOf(w);
+    const s = Math.max(0, i - 40);
+    return (s > 0 ? "…" : "") + text.slice(s, s + 120) + "…";
+  }
+  function bindSearch() {
+    const box = $("#searchBox"), inp = $("#searchInput"), out = $("#results");
+    $("#searchBtn").onclick = () => { const o = !box.classList.contains("open"); box.classList.toggle("open", o); $("#searchBtn").setAttribute("aria-expanded", String(o)); if (o) inp.focus(); };
+    inp.oninput = () => {
+      const qs = inp.value.trim();
+      const res = search(qs);
+      if (!qs) { out.innerHTML = ""; $("#searchMsg").textContent = ""; return; }
+      out.innerHTML = res.map((e, i) => `<li><button data-i="${i}"><div class="r-t">${esc(e.topic.title)}</div><div class="r-l">Lecture ${e.lec.id}: ${esc(e.lec.title)}</div><div class="r-s">${esc(snippet(e.text, qs))}</div></button></li>`).join("");
+      $("#searchMsg").innerHTML = res.length ? "" : `<div class="empty-msg">No topics match “${esc(qs)}”.</div>`;
+      out.querySelectorAll("button").forEach((b) => (b.onclick = () => { const e = res[Number(b.dataset.i)]; box.classList.remove("open"); $("#searchBtn").setAttribute("aria-expanded", "false"); go(e.lec.id, e.topic.id); }));
+    };
+    inp.onkeydown = (e) => { if (e.key === "Escape") { box.classList.remove("open"); $("#searchBtn").focus(); } };
+  }
+
+  /* ---------- Routing ---------- */
+  function go(lecId, topicId) {
+    pendingTopic = topicId || null;
+    const target = `#lecture-${lecId}`;
+    if (location.hash === target) route(); else location.hash = target;
+  }
+  function route() {
+    const h = location.hash.slice(1);
+    openRail(false);
+    if (h === "test-yourself") { if (!quiz.pool.length && quiz.lec === "all" && !quiz.ans.length) startQuiz("all"); else renderQuiz(); }
+    else { const m = /^lecture-(\d+)$/.exec(h); renderLecture(m ? Number(m[1]) : 1); }
+  }
+  window.addEventListener("hashchange", route);
+
+  document.addEventListener("click", (e) => {
+    const t = e.target.closest("[data-lec],[data-go],[data-quiz],#closeRail");
+    if (!t) return;
+    if (t.id === "closeRail") return openRail(false);
+    if (t.dataset.topic) { e.preventDefault(); return go(Number(t.dataset.lec), t.dataset.topic); }
+    if (t.dataset.go === "quiz") { openRail(false); if (location.hash !== "#test-yourself") location.hash = "test-yourself"; else renderQuiz(); return; }
+    if (t.dataset.quiz) { startQuiz(t.dataset.quiz); if (location.hash !== "#test-yourself") location.hash = "test-yourself"; return; }
+    if (t.classList.contains("lec-btn")) go(Number(t.dataset.lec));
+  });
+  $("#menuBtn").onclick = () => openRail(!rail.classList.contains("open"));
+  scrim.onclick = () => openRail(false);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") openRail(false); });
+  $("#quizBtn").onclick = () => { if (location.hash !== "#test-yourself") location.hash = "test-yourself"; };
+
+  /* ---------- Reading progress and back to top ---------- */
+  const prog = $("#prog"), toTop = $("#toTop");
+  toTop.onclick = () => window.scrollTo({ top: 0 });
+  function onScroll() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const reading = location.hash !== "#test-yourself";
+    prog.style.width = reading && max > 0 ? Math.min(100, (window.scrollY / max) * 100) + "%" : "0";
+    toTop.hidden = window.scrollY < 700;
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  /* ---------- Start ---------- */
+  try {
+    bindSearch();
+    route();
+    onScroll();
+  } catch (err) {
+    view.innerHTML = `<div class="state"><h1>Something went wrong</h1><p>The lecture content could not be displayed. Reload the page to try again.</p></div>`;
+    console.error(err);
+  }
+})();
+
+
+</script>
+
+</body></html>
